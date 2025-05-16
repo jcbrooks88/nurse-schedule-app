@@ -10,6 +10,10 @@ export const shiftResolver = {
           createdBy: true,
           assignedTo: true,
         },
+        where: {
+          status: { not: "CANCELLED" },
+        },
+        orderBy: { start: 'asc' },
       });
     },
   },

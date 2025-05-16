@@ -11,6 +11,9 @@ export const typeDefs = gql`
     name: String!
     email: String!
     role: Role!
+    createdAt: String!
+    assignedShifts: [Shift!]!
+    shiftRequests: [ShiftRequest!]!
   }
 
   type AuthPayload {

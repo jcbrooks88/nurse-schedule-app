@@ -34,3 +34,43 @@ export const GET_DASHBOARD_DATA = gql`
     }
   }
 `;
+
+export const GET_SHIFTS = gql`
+  query GetShifts {
+    shifts {
+      id
+      title
+      start
+      end
+    }
+  }
+`;
+
+export const GET_ME = gql`
+  query GetMe {
+    me {
+      id
+      name
+      email
+      role
+      createdAt
+      assignedShifts {
+        id
+        title
+        start
+        end
+        status
+      }
+      shiftRequests {
+        id
+        status
+        createdAt
+        shift {
+          id
+          title
+          start
+        }
+      }
+    }
+  }
+`;

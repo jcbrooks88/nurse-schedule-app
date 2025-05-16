@@ -19,7 +19,7 @@ interface ShiftRequest {
   status: string;
 }
 
-export default function Dashboard() {
+export default function DashboardComponent() {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
