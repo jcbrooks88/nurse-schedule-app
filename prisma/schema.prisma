@@ -16,8 +16,10 @@ model User {
   createdAt DateTime @default(now())
 
   // Relations
-  createdShifts  Shift[] @relation("UserCreatedShifts")
-  assignedShifts Shift[] @relation("UserAssignedShifts")
+  createdShifts  Shift[]        @relation("UserCreatedShifts")
+  assignedShifts Shift[]        @relation("UserAssignedShifts")
+  shiftRequests  ShiftRequest[]
+  proposedSwaps  ShiftSwap[]    @relation("Proposer")
 }
 
 model Shift {
@@ -36,6 +38,37 @@ model Shift {
 
   assignedTo   User?   @relation("UserAssignedShifts", fields: [assignedToId], references: [id])
   assignedToId String?
+
+  shiftRequests ShiftRequest[]
+  fromSwaps     ShiftSwap[]    @relation("FromShift")
+  toSwaps       ShiftSwap[]    @relation("ToShift")
+}
+
+model ShiftRequest {
+  id      String @id @default(uuid())
+  shift   Shift  @relation(fields: [shiftId], references: [id])
+  shiftId String
+
+  requester   User   @relation(fields: [requesterId], references: [id])
+  requesterId String
+
+  status    RequestStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+}
+
+model ShiftSwap {
+  id          String @id @default(uuid())
+  fromShift   Shift  @relation("FromShift", fields: [fromShiftId], references: [id])
+  fromShiftId String
+
+  toShift   Shift  @relation("ToShift", fields: [toShiftId], references: [id])
+  toShiftId String
+
+  proposer   User   @relation("Proposer", fields: [proposerId], references: [id])
+  proposerId String
+
+  status    SwapStatus @default(PENDING)
+  createdAt DateTime   @default(now())
 }
 
 enum Role {
@@ -48,4 +81,16 @@ enum ShiftStatus {
   CONFIRMED
   SWAPPED
   CANCELLED
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum SwapStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
 }

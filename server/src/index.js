@@ -5,6 +5,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { typeDefs } from './schemas/typeDefs.js';
 import { authResolver } from './resolvers/authResolver.js';
 import { authenticate } from './middleware/auth.js';
+import { shiftResolver } from './resolvers/shiftResolver.js';
 
 dotenv.config();
 const app = express();
@@ -12,7 +13,7 @@ app.use(cors());
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers: [authResolver],
+  resolvers: [authResolver, shiftResolver],
   context: async ({ req }) => ({ user: await authenticate(req) }),
 });
 
