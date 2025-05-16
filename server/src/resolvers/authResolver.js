@@ -44,10 +44,18 @@ export const authResolver = {
     },
   },
 
-  Query: {
-    me: async (_, __, { user }) => {
-      if (!user) throw new Error('Unauthorized');
-      return await prisma.user.findUnique({ where: { id: user.id } });
-    },
+Query: {
+  me: async (_, __, context) => {
+    if (!context.user) throw new AuthenticationError('Not authenticated');
+    return await prisma.user.findUnique({
+      where: { id: context.user.id },
+      include: {
+        assignedShifts: true,
+        shiftRequests: {
+          include: { shift: true },
+        },
+      },
+    });
   },
-};
+ },
+}
