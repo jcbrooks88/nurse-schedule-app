@@ -8,15 +8,44 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(uuid())
-  name     String
-  email    String   @unique
-  password String
-  role     Role     @default(NURSE)
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(NURSE)
   createdAt DateTime @default(now())
+
+  // Relations
+  createdShifts  Shift[] @relation("UserCreatedShifts")
+  assignedShifts Shift[] @relation("UserAssignedShifts")
+}
+
+model Shift {
+  id          String      @id @default(uuid())
+  title       String
+  description String?
+  start       DateTime
+  end         DateTime
+  status      ShiftStatus @default(PENDING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  createdBy   User   @relation("UserCreatedShifts", fields: [createdById], references: [id])
+  createdById String
+
+  assignedTo   User?   @relation("UserAssignedShifts", fields: [assignedToId], references: [id])
+  assignedToId String?
 }
 
 enum Role {
   NURSE
   ADMIN
+}
+
+enum ShiftStatus {
+  PENDING
+  CONFIRMED
+  SWAPPED
+  CANCELLED
 }
