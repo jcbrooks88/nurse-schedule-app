@@ -20,6 +20,7 @@ model User {
   assignedShifts Shift[]        @relation("UserAssignedShifts")
   shiftRequests  ShiftRequest[]
   proposedSwaps  ShiftSwap[]    @relation("Proposer")
+  availabilities Availability[] // 👈 NEW RELATION
 }
 
 model Shift {
@@ -69,6 +70,18 @@ model ShiftSwap {
 
   status    SwapStatus @default(PENDING)
   createdAt DateTime   @default(now())
+}
+
+model Availability {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  date        DateTime
+  isAvailable Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, date]) // Prevent duplicate availability entries for same user/date
 }
 
 enum Role {
