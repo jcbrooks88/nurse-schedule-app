@@ -65,6 +65,7 @@ extend type Mutation {
   createShift(input: ShiftInput!): Shift!
   updateShift(id: ID!, input: ShiftInput!): Shift!
   deleteShift(id: ID!): Shift!
+  requestShift(shiftId: String!): ShiftRequest!
 }
 
 enum RequestStatus {

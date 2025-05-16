@@ -24,3 +24,13 @@ export const LOGIN_USER = gql`
     }
   }
 `;
+
+export const REQUEST_SHIFT = gql`
+  mutation RequestShift($shiftId: String!) {
+    requestShift(shiftId: $shiftId) {
+      id
+      status
+      createdAt
+    }
+  }
+`;

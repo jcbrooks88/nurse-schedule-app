@@ -37,5 +37,16 @@ export const shiftResolver = {
       if (!user || user.role !== 'ADMIN') throw new Error('Unauthorized');
       return await prisma.shift.delete({ where: { id } });
     },
+
+    requestShift: async (_, { shiftId }, { user, prisma }) => {
+      if (!user) throw new Error("Not authenticated");
+
+      return prisma.shiftRequest.create({
+      data: {
+        shiftId,
+        requesterId: user.id,
+      },
+    });
+  },
   },
 };
