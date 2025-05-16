@@ -116,6 +116,23 @@ extend type Mutation {
   updateShiftRequestStatus(id: ID!, status: RequestStatus!): ShiftRequest!
   updateShiftSwapStatus(id: ID!, status: SwapStatus!): ShiftSwap!
 }
+type Availability {
+  id: ID!
+  user: User!
+  userId: String!
+  date: String!
+  isAvailable: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+extend type Query {
+  getAvailability(userId: String!, month: String!): [Availability!]!
+}
+
+extend type Mutation {
+  setAvailability(date: String!, isAvailable: Boolean!): Availability!
+}
 
 
 `;
