@@ -10,4 +10,27 @@ export const GET_AVAILABILITY = gql`
   }
 `;
 
-
+export const GET_DASHBOARD_DATA = gql`
+  query GetDashboardData {
+    me {
+      name
+      role
+      assignedShifts {
+        id
+        title
+        start
+        end
+        status
+      }
+      shiftRequests {
+        id
+        status
+        shift {
+          title
+          start
+          end
+        }
+      }
+    }
+  }
+`;
