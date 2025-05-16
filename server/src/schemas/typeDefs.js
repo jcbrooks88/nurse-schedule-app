@@ -67,4 +67,55 @@ extend type Mutation {
   deleteShift(id: ID!): Shift!
 }
 
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum SwapStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+type ShiftRequest {
+  id: ID!
+  shift: Shift!
+  requester: User!
+  status: RequestStatus!
+  createdAt: String!
+}
+
+type ShiftSwap {
+  id: ID!
+  fromShift: Shift!
+  toShift: Shift!
+  proposer: User!
+  status: SwapStatus!
+  createdAt: String!
+}
+
+input ShiftRequestInput {
+  shiftId: ID!
+}
+
+input ShiftSwapInput {
+  fromShiftId: ID!
+  toShiftId: ID!
+}
+
+extend type Query {
+  myShiftRequests: [ShiftRequest!]!
+  myShiftSwaps: [ShiftSwap!]!
+}
+
+extend type Mutation {
+  requestShift(input: ShiftRequestInput!): ShiftRequest!
+  proposeShiftSwap(input: ShiftSwapInput!): ShiftSwap!
+  updateShiftRequestStatus(id: ID!, status: RequestStatus!): ShiftRequest!
+  updateShiftSwapStatus(id: ID!, status: SwapStatus!): ShiftSwap!
+}
+
+
 `;
