@@ -2,20 +2,34 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { ApolloServer } from 'apollo-server-express';
-import { typeDefs } from './schemas/typeDefs.js';
-import { authResolver } from './resolvers/authResolver.js';
 import { authenticate } from './middleware/auth.js';
+
+import { typeDefs as authTypeDefs } from './schemas/typeDefs.js';
+import { typeDefs as availabilityTypeDefs } from './graphql/typeDefs/availTypeDefs.js';
+
+import { authResolver } from './resolvers/authResolver.js';
 import { shiftResolver } from './resolvers/shiftResolver.js';
 import { shiftRequestSwapResolver } from './resolvers/swapResolver.js';
+import { availabilityResolvers } from './graphql/resolvers/availResolvers.js';
 
 dotenv.config();
 const app = express();
 app.use(cors());
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers: [authResolver, shiftResolver, shiftRequestSwapResolver],
-  context: async ({ req }) => ({ user: await authenticate(req) }),
+  typeDefs: [
+    authTypeDefs,
+    availabilityTypeDefs,
+  ],
+  resolvers: [
+    authResolver,
+    shiftResolver,
+    shiftRequestSwapResolver,
+    availabilityResolvers,
+  ],
+  context: async ({ req }) => ({
+    user: await authenticate(req),
+  }),
 });
 
 await server.start();
