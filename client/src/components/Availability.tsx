@@ -41,17 +41,26 @@ const AvailabilityCalendar = ({ userId }: { userId: string }) => {
       ?.filter((a: Availability) => a.isAvailable)
       ?.map((a: Availability) => new Date(a.date)) || [];
 
-  return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-2">Your Availability</h2>
-      <DayPicker
-        mode="multiple"
-        selected={availableDates}
-        onDayClick={handleDayClick}
-        month={new Date(month + '-01')}
-      />
+return (
+  <div className="w-full">
+    <div className="flex justify-center">
+      <div className="rounded-xl border border-gray-200 shadow-md p-4 bg-gray-50">
+        <h2 className="text-lg font-medium text-gray-800 mb-4 text-center">Your Availability Calendar</h2>
+        <DayPicker
+          mode="multiple"
+          selected={availableDates}
+          onDayClick={handleDayClick}
+          month={new Date(month + '-01')}
+          className="text-sm"
+          styles={{
+            caption: { color: '#1d4ed8', fontWeight: '500' },
+            day: { borderRadius: '8px', padding: '0.5rem' },
+          }}
+        />
+      </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default AvailabilityCalendar;

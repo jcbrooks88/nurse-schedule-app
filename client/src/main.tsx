@@ -7,7 +7,7 @@ import client from './apollo/client';
 
 import Login from './pages/LoginPage';
 import Dashboard from './pages/DashboardPage';
-import Calendar from './pages/Calendar';
+import AvailabilityPage from './pages/AvailabilityPage';
 import Requests from './pages/RequestsPage';
 import Profile from './pages/ProfilePage';
 
@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/availability" element={<AvailabilityPage />} />
           <Route path="/requests" element={<Requests />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
