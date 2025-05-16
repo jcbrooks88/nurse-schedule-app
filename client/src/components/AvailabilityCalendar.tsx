@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
-import { GET_AVAILABILITY, SET_AVAILABILITY } from '../graphql/availability';
+import { GET_AVAILABILITY, SET_AVAILABILITY } from '../graphql/queries';
 
 type Availability = {
   date: string;

@@ -10,12 +10,4 @@ export const GET_AVAILABILITY = gql`
   }
 `;
 
-export const SET_AVAILABILITY = gql`
-  mutation SetAvailability($date: String!, $isAvailable: Boolean!) {
-    setAvailability(date: $date, isAvailable: $isAvailable) {
-      id
-      date
-      isAvailable
-    }
-  }
-`;
+
