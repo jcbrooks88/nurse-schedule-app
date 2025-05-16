@@ -1,3 +1,4 @@
+// components/AvailabilityCalendar.tsx
 import { useMutation, useQuery } from '@apollo/client';
 import { format } from 'date-fns';
 import { DayPicker } from 'react-day-picker';
@@ -11,7 +12,6 @@ type Availability = {
 };
 
 const AvailabilityCalendar = ({ userId }: { userId: string }) => {
-  // Removed unused selected state
   const month = format(new Date(), 'yyyy-MM');
 
   const { data } = useQuery(GET_AVAILABILITY, {
@@ -34,8 +34,6 @@ const AvailabilityCalendar = ({ userId }: { userId: string }) => {
         isAvailable: match ? !match.isAvailable : true,
       },
     });
-
-    // Removed setSelected(day) as selected state is not used
   };
 
   const availableDates =

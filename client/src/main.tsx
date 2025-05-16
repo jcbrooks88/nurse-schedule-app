@@ -5,11 +5,11 @@ import { ApolloProvider } from '@apollo/client';
 import './index.css';
 import client from './apollo/client';
 
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
+import Login from './pages/LoginPage';
+import Dashboard from './pages/DashboardPage';
 import Calendar from './pages/Calendar';
-import Requests from './pages/Requests';
-import Profile from './pages/Profile';
+import Requests from './pages/RequestsPage';
+import Profile from './pages/ProfilePage';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
