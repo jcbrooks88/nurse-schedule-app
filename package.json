@@ -2,6 +2,10 @@
   "name": "nurse-shift-pro",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
   "scripts": {
     "dev": "concurrently \"npm run -w server dev\" \"npm run prisma:studio\"",
     "prisma:generate": "prisma generate",
@@ -14,6 +18,11 @@
     "prisma": "^6.8.1"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.15.18",
+    "concurrently": "^9.1.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.8.3"
   }
 }

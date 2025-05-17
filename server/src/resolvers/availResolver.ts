@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { isAuthenticated } from "../utils/auth";
+import { isAuthenticated } from "../middleware/auth.ts";
 
 const prisma = new PrismaClient();
 
