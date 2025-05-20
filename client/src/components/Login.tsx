@@ -23,43 +23,47 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded px-8 pt-6 pb-8 w-full max-w-sm"
+        className="bg-card shadow-card rounded-2xl px-8 pt-8 pb-10 w-full max-w-md border border-accent"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center">Login here</h2>
+        <h2 className="text-3xl font-extrabold text-center mb-6 text-teal tracking-tight font-sans">
+          Login to your account
+        </h2>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formState.email}
-          onChange={handleChange}
-          className="w-full px-3 py-2 mb-4 border rounded"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formState.password}
-          onChange={handleChange}
-          className="w-full px-3 py-2 mb-4 border rounded"
-          required
-        />
-        {error && (
-          <p className="text-red-500 text-sm mb-2">
-            {error.message.replace('GraphQL error: ', '')}
-          </p>
-        )}
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-          disabled={loading}
-        >
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
+        <div className="space-y-4">
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formState.email}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-teal transition duration-200"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formState.password}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-teal transition duration-200"
+            required
+          />
+          {error && (
+            <p className="text-burgundy text-sm text-center">
+              {error.message.replace('GraphQL error: ', '')}
+            </p>
+          )}
+          <button
+            type="submit"
+            className="w-full bg-orange text-white py-2 rounded-lg font-semibold hover:bg-opacity-90 transition duration-200 shadow-md"
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </div>
       </form>
     </div>
   );
