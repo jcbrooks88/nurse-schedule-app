@@ -94,16 +94,21 @@ enum ShiftStatus {
   CONFIRMED
   SWAPPED
   CANCELLED
+  OPEN
 }
 
 enum RequestStatus {
   PENDING
   APPROVED
   REJECTED
+  CONFIRMED
+  SWAPPED
 }
 
 enum SwapStatus {
   PENDING
   ACCEPTED
   DECLINED
+  CONFIRMED
+  SWAPPED
 }
