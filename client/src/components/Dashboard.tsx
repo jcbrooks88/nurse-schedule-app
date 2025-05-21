@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
+import { useMemo } from 'react';
 import { GET_DASHBOARD_DATA } from '../graphql/queries';
 
 interface Shift {
@@ -20,7 +21,7 @@ interface ShiftRequest {
 
 export default function DashboardComponent() {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const token = useMemo(() => localStorage.getItem('token'), []);
   const { data, loading, error } = useQuery(GET_DASHBOARD_DATA);
 
   useEffect(() => {

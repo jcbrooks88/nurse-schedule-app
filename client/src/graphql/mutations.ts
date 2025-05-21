@@ -14,7 +14,8 @@ export const SET_AVAILABILITY = gql`
 export const LOGIN_USER = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
-      token
+      accessToken
+      refreshToken
       user {
         id
         name
@@ -36,9 +37,16 @@ export const REQUEST_SHIFT = gql`
 `;
 
 export const ADD_USER = gql`
-  mutation AddUser($email: String!, $password: String!) {
-    addUser(email: $email, password: $password) {
-      token
+  mutation AddUser($name: String!, $email: String!, $password: String!) {
+    addUser(name: $name, email: $email, password: $password) {
+      accessToken
+      refreshToken
+      user {
+        id
+        email
+        role
+        name
+      }
     }
   }
 `;

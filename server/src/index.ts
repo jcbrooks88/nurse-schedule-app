@@ -7,11 +7,15 @@ import { authenticate } from './middleware/auth.ts';
 import { typeDefs } from './schemas/typeDefs.ts';
 import { resolvers } from './utils/mergeResolvers.ts';
 
-
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// ✅ Proper CORS configuration
+app.use(cors({
+  origin: 'http://localhost:5173', // your frontend origin
+  credentials: true,               // allow cookies/auth headers
+}));
 
 const server = new ApolloServer({
   typeDefs,
@@ -21,8 +25,17 @@ const server = new ApolloServer({
   }),
 });
 
+// Start Apollo Server
 await server.start();
-server.applyMiddleware({ app });
+
+// ✅ Allow CORS credentials in Apollo middleware too
+server.applyMiddleware({
+  app,
+  cors: {
+    origin: 'http://localhost:5173',
+    credentials: true,
+  },
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`);

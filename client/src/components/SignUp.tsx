@@ -5,14 +5,18 @@ import { useNavigate } from 'react-router-dom';
 
 export default function SignUpForm() {
   const navigate = useNavigate();
-  const [formState, setFormState] = useState({ email: '', password: '' });
+  const [formState, setFormState] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
   const [success, setSuccess] = useState(false);
 
   const [addUser, { loading, error }] = useMutation(ADD_USER, {
     onCompleted: (data) => {
-      localStorage.setItem('token', data.addUser.token);
+      localStorage.setItem('accessToken', data.addUser.accessToken);
       setSuccess(true);
-      setTimeout(() => navigate('/dashboard'), 1500);
+      navigate('/dashboard');     
     },
     onError: () => {
       setTimeout(() => window.location.reload(), 2500);
@@ -39,6 +43,15 @@ export default function SignUpForm() {
         </h2>
 
         <div className="space-y-4">
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={formState.name}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-accent rounded-lg focus:outline-none focus:ring-2 focus:ring-purple transition duration-200"
+            required
+          />
           <input
             type="email"
             name="email"
