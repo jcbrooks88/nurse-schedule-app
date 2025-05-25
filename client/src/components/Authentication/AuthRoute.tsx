@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import { useMemo } from 'react';
 
 interface AuthRouteProps {
-  children: JSX.Element;
+  children: React.ReactNode;
 }
 
 export function AuthRoute({ children }: AuthRouteProps) {

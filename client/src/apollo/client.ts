@@ -9,7 +9,7 @@ const httpLink = createHttpLink({
 
 // Middleware to add the Authorization header
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('accessToken'); // or from a memory store/context
+  const token = localStorage.getItem('token');
   return {
     headers: {
       ...headers,

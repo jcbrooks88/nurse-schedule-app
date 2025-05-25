@@ -3,13 +3,13 @@ const prisma = new PrismaClient();
 
 export const shiftRequestSwapResolver = {
   Query: {
-    myShiftRequests: async (_, __, { user }) => {
+    myShiftRequests: async (_: any, __: any, { user }: any) => {
       return prisma.shiftRequest.findMany({
         where: { requesterId: user.id },
         include: { shift: true },
       });
     },
-    myShiftSwaps: async (_, __, { user }) => {
+    myShiftSwaps: async (_: any, __: any, { user }: any) => {
       return prisma.shiftSwap.findMany({
         where: { proposerId: user.id },
         include: { fromShift: true, toShift: true },
@@ -18,7 +18,7 @@ export const shiftRequestSwapResolver = {
   },
 
   Mutation: {
-    requestShift: async (_, { input }, { user }) => {
+    requestShift: async (_: any, { input }: any, { user }: any) => {
       return prisma.shiftRequest.create({
         data: {
           shiftId: input.shiftId,
@@ -28,7 +28,7 @@ export const shiftRequestSwapResolver = {
       });
     },
 
-    proposeShiftSwap: async (_, { input }, { user }) => {
+    proposeShiftSwap: async (_: any, { input }: any, { user }: any) => {
       return prisma.shiftSwap.create({
         data: {
           fromShiftId: input.fromShiftId,
@@ -39,7 +39,7 @@ export const shiftRequestSwapResolver = {
       });
     },
 
-    updateShiftRequestStatus: async (_, { id, status }, { user }) => {
+    updateShiftRequestStatus: async (_: any, { id, status }: any, { user }: any) => {
       if (user.role !== 'ADMIN') throw new Error('Unauthorized');
       return prisma.shiftRequest.update({
         where: { id },
@@ -47,7 +47,7 @@ export const shiftRequestSwapResolver = {
       });
     },
 
-    updateShiftSwapStatus: async (_, { id, status }, { user }) => {
+    updateShiftSwapStatus: async (_: any, { id, status }: any, { user }: any) => {
       if (user.role !== 'ADMIN') throw new Error('Unauthorized');
       return prisma.shiftSwap.update({
         where: { id },

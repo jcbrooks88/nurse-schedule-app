@@ -1,11 +1,15 @@
 import { PrismaClient } from "@prisma/client";
-import { isAuthenticated } from "../middleware/auth.ts";
+import { isAuthenticated } from "../middleware/auth";
 
 const prisma = new PrismaClient();
 
 export const availabilityResolvers = {
   Query: {
-    getAvailability: async (_, { userId, month }) => {
+    getAvailability: async (
+      _: unknown,
+      args: { userId: string; month: string }
+    ) => {
+      const { userId, month } = args;
       const start = new Date(`${month}-01`);
       const end = new Date(start);
       end.setMonth(end.getMonth() + 1);
@@ -22,8 +26,13 @@ export const availabilityResolvers = {
     },
   },
   Mutation: {
-    setAvailability: async (_, { date, isAvailable }, context) => {
-      const user = isAuthenticated(context);
+    setAvailability: async (
+      _: unknown,
+      args: { date: string; isAvailable: boolean },
+      context: any
+    ) => {
+      const { date, isAvailable } = args;
+      const user = isAuthenticated(context.req, context.res, context.next);
       const parsedDate = new Date(date);
 
       return prisma.availability.upsert({

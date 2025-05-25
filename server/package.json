@@ -4,8 +4,8 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsx src/index.ts",
-    "start": "node dist/index.js",
+    "dev": "tsx src/server.ts",
+    "start": "node dist/src/server.js",
     "build": "tsc"
   },
   "keywords": [],
@@ -13,9 +13,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@apollo/server": "^4.12.1",
     "@graphql-tools/merge": "^9.0.24",
-    "apollo-server-express": "^3.13.0",
     "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.18.2",
@@ -24,6 +26,11 @@
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.5",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.18",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.9",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"

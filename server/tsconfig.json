@@ -8,11 +8,13 @@
     "outDir": "dist",
     "types": ["node"],
     "resolveJsonModule": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   },
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"
   },
-  "include": ["src"]
+  "include": ["server.ts","src"]
 }

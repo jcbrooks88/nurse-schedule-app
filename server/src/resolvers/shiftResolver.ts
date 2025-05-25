@@ -19,17 +19,25 @@ export const shiftResolver = {
   },
 
   Mutation: {
-    createShift: async (_, { input }, { user }) => {
+    createShift: async (
+      _: any,
+      { input }: { input: { [key: string]: any } },
+      { user }: { user: { id: string; role: string } }
+    ) => {
       if (!user || user.role !== 'ADMIN') throw new Error('Unauthorized');
       return await prisma.shift.create({
         data: {
+          title: input.title,
+          start: input.start,
+          end: input.end,
+          // include any other required fields here
           ...input,
           createdById: user.id,
         },
       });
     },
 
-    updateShift: async (_, { id, input }, { user }) => {
+    updateShift: async (_: any, { id, input }: any, { user }: any) => {
       if (!user || user.role !== 'ADMIN') throw new Error('Unauthorized');
       return await prisma.shift.update({
         where: { id },
@@ -37,12 +45,12 @@ export const shiftResolver = {
       });
     },
 
-    deleteShift: async (_, { id }, { user }) => {
+    deleteShift: async (_: any, { id }: any, { user }: any) => {
       if (!user || user.role !== 'ADMIN') throw new Error('Unauthorized');
       return await prisma.shift.delete({ where: { id } });
     },
 
-    requestShift: async (_, { shiftId }, { user, prisma }) => {
+    requestShift: async (_: any, { shiftId }: any, { user, prisma }: any) => {
       if (!user) throw new Error("Not authenticated");
 
       return prisma.shiftRequest.create({
