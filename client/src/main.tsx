@@ -12,8 +12,8 @@ import AvailabilityPage from './pages/AvailabilityPage';
 import Requests from './pages/RequestsPage';
 import Profile from './pages/ProfilePage';
 
-import { AuthRoute } from './components/Authentication/AuthRoute';
-import { PublicRoute } from './components/Authentication/PublicRoute';
+import { AuthRoute } from './components/authentication/AuthRoute';
+import { PublicRoute } from './components/authentication/PublicRoute';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

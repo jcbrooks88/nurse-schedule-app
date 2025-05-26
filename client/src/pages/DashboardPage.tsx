@@ -1,12 +1,11 @@
-import DashboardComponent from "../components/Dashboard";
-import { LogoutButton } from "../components/LogoutButton";
-
+import DashboardComponent from "../components/dashboard/Dashboard";
+import Header from "../components/Header";
 
 export default function Dashboard() {
   return (
     <div>
-        <DashboardComponent />
-        <LogoutButton />
+      <Header />
+      <DashboardComponent />
     </div>
   );
 }

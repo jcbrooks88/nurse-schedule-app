@@ -20,7 +20,7 @@ model User {
   assignedShifts Shift[]        @relation("UserAssignedShifts")
   shiftRequests  ShiftRequest[]
   proposedSwaps  ShiftSwap[]    @relation("Proposer")
-  availabilities Availability[] // 👈 NEW RELATION
+  availabilities Availability[]
 }
 
 model Shift {
@@ -92,6 +92,7 @@ enum Role {
 enum ShiftStatus {
   PENDING
   CONFIRMED
+  APPROVED
   SWAPPED
   CANCELLED
   OPEN

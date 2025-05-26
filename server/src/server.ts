@@ -52,7 +52,7 @@ app.post('/refresh-token', async (req: Request, res: Response) => {
       path: '/refresh-token',
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
     return res.send({ ok: true, accessToken: newAccessToken });

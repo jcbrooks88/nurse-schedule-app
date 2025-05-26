@@ -8,6 +8,7 @@ export const typeDefs = gql`
 
   enum ShiftStatus {
     PENDING
+    APPROVED
     CONFIRMED
     SWAPPED
     CANCELLED
@@ -16,6 +17,7 @@ export const typeDefs = gql`
   enum RequestStatus {
     PENDING
     APPROVED
+    CONFIRMED
     REJECTED
   }
 
@@ -31,8 +33,8 @@ export const typeDefs = gql`
     email: String!
     role: Role!
     createdAt: String!
-    assignedShifts: [Shift!]!
-    shiftRequests: [ShiftRequest!]!
+    assignedShifts: [Shift!]
+    shiftRequests: [ShiftRequest!]
   }
 
   type AuthPayload {
@@ -106,6 +108,7 @@ export const typeDefs = gql`
     myShiftSwaps: [ShiftSwap!]!
     getAvailability(userId: String!, month: String!): [Availability!]!
   }
+
 
   type Mutation {
     addUser(name: String!, email: String!, password: String!): AuthPayload!

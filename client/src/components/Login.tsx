@@ -8,7 +8,7 @@ export default function LoginForm() {
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [login, { loading, error }] = useMutation(LOGIN_USER, {
     onCompleted: (data) => {
-      localStorage.setItem('token', data.login.token);
+      localStorage.setItem('token', data.login.accessToken);
       navigate('/dashboard');
     },
   });
