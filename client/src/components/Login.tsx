@@ -26,9 +26,9 @@ export default function LoginForm() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-card shadow-card rounded-2xl px-8 pt-8 pb-10 w-full max-w-md border border-accent"
-      >
-        <h2 className="text-3xl font-extrabold text-center mb-6 text-teal tracking-tight font-sans">
+        className="bg-card shadow-card rounded-2xl px-8 pt-8 pb-10 w-full max-w-full sm:max-w-md md:max-w-lg border border-accent"
+        >
+        <h2 className="text-2xl font-extrabold text-center mb-6 text-teal tracking-tight font-sans">
           Login to your account
         </h2>
 

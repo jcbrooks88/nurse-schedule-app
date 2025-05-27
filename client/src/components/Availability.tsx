@@ -4,6 +4,7 @@ import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { GET_AVAILABILITY } from '../graphql/queries';
 import { SET_AVAILABILITY } from '../graphql/mutations';
+import "../App.css";
 
 type Availability = {
   date: string;
@@ -41,9 +42,9 @@ const AvailabilityCalendar = ({ userId }: { userId: string }) => {
       ?.map((a: Availability) => new Date(a.date)) || [];
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-8">
       <div className="flex justify-center">
-        <div className="bg-lightBeige rounded-xl border border-accent shadow-card hover:shadow-md transition-shadow p-6">
+        <div className="bg-white rounded-xl border border-accent shadow-card hover:shadow-md transition-shadow p-6">
           <h2 className="text-xl font-bold text-burgundyLight mb-4 text-center">
             Your Availability Calendar
           </h2>
@@ -52,10 +53,14 @@ const AvailabilityCalendar = ({ userId }: { userId: string }) => {
             selected={availableDates}
             onDayClick={handleDayClick}
             month={new Date(month + '-01')}
-            className="text-sm"
+            className="text-sm text-grayDarker"
             styles={{
-              caption: { color: '#3b3a36', fontWeight: '500' },
-              day: { borderRadius: '8px', padding: '0.5rem' },
+              caption: { color: '#4b4b4b', fontWeight: '500' },
+              day: {
+                borderRadius: '8px',
+                padding: '0.5rem',
+                color: '#2c5e5b',
+              },
             }}
           />
         </div>
