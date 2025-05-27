@@ -38,7 +38,7 @@ export default function SignUpForm() {
         onSubmit={handleSubmit}
         className="bg-card shadow-card rounded-2xl px-8 pt-8 pb-10 w-full max-w-md border border-accent"
       >
-        <h2 className="text-3xl font-extrabold text-center mb-6 text-purple tracking-tight font-sans">
+        <h2 className="text-3xl font-extrabold text-center mb-6 text-orange tracking-tight font-sans">
           Create an account
         </h2>
 

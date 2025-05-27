@@ -14,13 +14,11 @@ export default function Request() {
   const [shiftId, setShiftId] = useState('');
   const { data: shiftData, loading: loadingShifts } = useQuery(GET_SHIFTS);
   const [requestShift, mutationResult] = useMutation(REQUEST_SHIFT);
-  // Use mutationResult.data, mutationResult.loading, and mutationResult.error directly below
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await requestShift({ variables: { shiftId } });
-      alert('Shift request submitted!');
       setShiftId('');
     } catch (err) {
       console.error(err);
@@ -28,15 +26,18 @@ export default function Request() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 max-w-md mx-auto bg-white shadow-md rounded">
-      <h2 className="text-xl font-bold mb-4">Request a Shift</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="p-6 max-w-lg mx-auto bg-lightBeige border border-accent rounded-xl shadow-card hover:shadow-md transition-shadow"
+    >
+      <h2 className="text-2xl font-bold text-burgundyLight mb-4 text-center">Request a Shift</h2>
 
-      <label className="block mb-2">Select a Shift:</label>
+      <label className="block text-grayDark font-medium mb-2">Select a Shift:</label>
       {loadingShifts ? (
-        <p>Loading shifts...</p>
+        <p className="text-grayDark">Loading shifts...</p>
       ) : (
         <select
-          className="block w-full mb-4 p-2 border rounded"
+          className="block w-full mb-4 p-3 border border-gray-300 rounded bg-white text-grayDark"
           value={shiftId}
           onChange={e => setShiftId(e.target.value)}
           required
@@ -54,13 +55,17 @@ export default function Request() {
       <button
         type="submit"
         disabled={mutationResult.loading}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        className="bg-teal text-white px-5 py-2 rounded hover:bg-darkMossGreen transition-colors disabled:opacity-60"
       >
         {mutationResult.loading ? 'Submitting...' : 'Request Shift'}
       </button>
 
-      {mutationResult.error && <p className="text-red-500 mt-2">Error: {mutationResult.error.message}</p>}
-      {mutationResult.data && <p className="text-green-600 mt-2">Request sent!</p>}
+      {mutationResult.error && (
+        <p className="text-errorRed mt-3">Error: {mutationResult.error.message}</p>
+      )}
+      {mutationResult.data && (
+        <p className="text-successGreen mt-3">Shift request submitted successfully!</p>
+      )}
     </form>
   );
 }
