@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useState } from 'react';
-import { REQUEST_SHIFT } from '../graphql/mutations';
+import { REQUEST_SHIFT, DROP_SHIFT, JOIN_WAITLIST } from '../graphql/mutations';
 import { GET_SHIFTS } from '../graphql/queries';
 
 type Shift = {
@@ -8,69 +8,110 @@ type Shift = {
   title: string;
   start: string;
   end: string;
+  postedBy: {
+    role: 'ADMIN' | 'USER';
+    name: string;
+  };
 };
 
 export default function Request() {
-  const [shiftId, setShiftId] = useState('');
-  const { data: shiftData, loading: loadingShifts } = useQuery(GET_SHIFTS);
-  const [requestShift, mutationResult] = useMutation(REQUEST_SHIFT);
+  const [selectedShift, setSelectedShift] = useState<Shift | null>(null);
+  const { data: shiftData, loading: loadingShifts, error: shiftsError } = useQuery(GET_SHIFTS);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const [requestShift] = useMutation(REQUEST_SHIFT, {
+    refetchQueries: [{ query: GET_SHIFTS }],
+  });
+  const [dropShift] = useMutation(DROP_SHIFT, {
+    refetchQueries: [{ query: GET_SHIFTS }],
+  });
+  const [joinWaitlist] = useMutation(JOIN_WAITLIST, {
+    refetchQueries: [{ query: GET_SHIFTS }],
+  });
+
+  const handleAction = async (action: 'ACCEPT' | 'DROP' | 'WAITLIST') => {
+    if (!selectedShift) return;
     try {
-      await requestShift({ variables: { shiftId } });
-      setShiftId('');
+      if (action === 'ACCEPT') {
+        await requestShift({ variables: { shiftId: selectedShift.id } });
+      } else if (action === 'DROP') {
+        await dropShift({ variables: { shiftId: selectedShift.id } });
+      } else if (action === 'WAITLIST') {
+        await joinWaitlist({ variables: { shiftId: selectedShift.id } });
+      }
+      setSelectedShift(null);
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <form
-        onSubmit={handleSubmit}
-        className="p-6 max-w-lg bg-burgundy mx-auto border border-accent rounded-xl shadow-card hover:shadow-md transition-shadow"
-      >
-        <h2 className="text-2xl font-bold text-burgundyLight mb-4 text-center">
-          Request a Shift
-        </h2>
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <h2 className="text-3xl font-bold text-center text-burgundyLight mb-8">Available Shifts</h2>
 
-        <label className="block text-grayDark font-medium mb-2">Select a Shift:</label>
-        {loadingShifts ? (
-          <p className="text-grayDark">Loading shifts...</p>
-        ) : (
-          <select
-            className="block w-full mb-4 p-3 border border-gray-300 rounded bg-white text-grayDark"
-            value={shiftId}
-            onChange={(e) => setShiftId(e.target.value)}
-            required
-          >
-            <option value="">-- Choose a shift --</option>
-            {shiftData?.shifts.map((shift: Shift) => (
-              <option key={shift.id} value={shift.id}>
-                {shift.title} ({new Date(shift.start).toLocaleString()} -{' '}
-                {new Date(shift.end).toLocaleString()})
-              </option>
-            ))}
-          </select>
-        )}
+      {loadingShifts ? (
+        <p className="text-center text-grayDark">Loading...</p>
+      ) : shiftsError ? (
+        <p className="text-center text-errorRed">Error loading shifts.</p>
+      ) : (
+        <div className="grid gap-4 max-w-3xl mx-auto">
+          {shiftData.shifts.map((shift: Shift) => (
+            <div
+              key={shift.id}
+              className="border border-accent rounded-xl p-4 shadow-sm hover:shadow-md hover:bg-burgundyLight/10 transition-all duration-200 cursor-pointer"
+              onClick={() => setSelectedShift(shift)}
+            >
+              <h3 className="text-lg font-semibold text-burgundy">{shift.title}</h3>
+              <p className="text-sm text-grayDark">
+                {new Date(shift.start).toLocaleString()} – {new Date(shift.end).toLocaleString()}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
 
-        <button
-          type="submit"
-          disabled={mutationResult.loading}
-          className="bg-teal text-white px-5 py-2 rounded hover:bg-darkMossGreen transition-colors disabled:opacity-60"
-        >
-          {mutationResult.loading ? 'Submitting...' : 'Request Shift'}
-        </button>
+      {/* Modal */}
+      {selectedShift && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 shadow-xl w-full max-w-md animate-fadeIn">
+            <h3 className="text-xl font-bold mb-2 text-burgundy">{selectedShift.title}</h3>
+            <p className="mb-1 text-grayDark">
+              <strong>Posted By:</strong> {selectedShift.postedBy.role} ({selectedShift.postedBy.name})
+            </p>
+            <p className="mb-4 text-grayDark">
+              <strong>Time:</strong>{' '}
+              {new Date(selectedShift.start).toLocaleString()} – {new Date(selectedShift.end).toLocaleString()}
+            </p>
 
-        {mutationResult.error && (
-          <p className="text-errorRed mt-3">Error: {mutationResult.error.message}</p>
-        )}
-        {mutationResult.data && (
-          <p className="text-successGreen mt-3">Shift request submitted successfully!</p>
-        )}
-      </form>
-    </div>
+            <div className="flex flex-wrap gap-2 justify-center mt-4">
+              <button
+                className="bg-teal hover:bg-darkMossGreen text-white px-4 py-2 rounded-lg font-medium transition"
+                onClick={() => handleAction('ACCEPT')}
+              >
+                Accept
+              </button>
+              <button
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition"
+                onClick={() => handleAction('DROP')}
+              >
+                Drop
+              </button>
+              <button
+                className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-medium transition"
+                onClick={() => handleAction('WAITLIST')}
+              >
+                Waitlist
+              </button>
+            </div>
+
+            <button
+              className="mt-6 block mx-auto text-sm text-gray-500 hover:text-burgundyLight underline transition"
+              onClick={() => setSelectedShift(null)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

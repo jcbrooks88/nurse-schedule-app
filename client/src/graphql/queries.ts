@@ -1,5 +1,38 @@
 import { gql } from '@apollo/client';
 
+export const GET_SHIFTS = gql`
+  query GetShifts {
+    shifts {
+      id
+      title
+      start
+      end
+      createdBy {
+        role
+        name
+      }
+      assignedTo { id }
+      status
+    }
+  }
+`;
+
+export const GET_SHIFT_REQUESTS = gql`
+  query GetShiftRequests {
+    myShiftRequests {
+      id
+      status
+      shift {
+        id
+        title
+        start
+        end
+        status
+      }
+    }
+  }
+`;
+
 export const GET_AVAILABILITY = gql`
   query GetAvailability($userId: String!, $month: String!) {
     getAvailability(userId: $userId, month: $month) {
@@ -35,18 +68,6 @@ export const GET_DASHBOARD_DATA = gql`
           start
         }
       }
-    }
-  }
-`;
-
-
-export const GET_SHIFTS = gql`
-  query GetShifts {
-    shifts {
-      id
-      title
-      start
-      end
     }
   }
 `;

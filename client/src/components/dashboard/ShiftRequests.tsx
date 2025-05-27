@@ -1,3 +1,8 @@
+import { useMutation, useQuery } from '@apollo/client';
+import { useMemo } from 'react';
+import { GET_SHIFT_REQUESTS } from '../../graphql/queries';
+import { CANCEL_SHIFT_REQUEST } from '../../graphql/mutations';
+
 interface Shift {
   id: string;
   title: string;
@@ -22,6 +27,10 @@ interface SanitizedShiftRequest extends Omit<ShiftRequest, 'shift'> {
   };
 }
 
+interface GetShiftRequestsData {
+  myShiftRequests: ShiftRequest[];
+}
+
 function sanitizeShiftRequests(requests: ShiftRequest[]): SanitizedShiftRequest[] {
   return requests.map((req) => ({
     ...req,
@@ -29,57 +38,102 @@ function sanitizeShiftRequests(requests: ShiftRequest[]): SanitizedShiftRequest[
       ...req.shift,
       start: new Date(req.shift.start),
       end: new Date(req.shift.end),
-      status: req.shift.status,
-      id: req.shift.id,
-      title: req.shift.title,
     },
   }));
 }
 
-export default function ShiftRequests({ requests }: { requests: ShiftRequest[] }) {
-  const sanitizedRequests = sanitizeShiftRequests(requests);
+export default function ShiftRequests() {
+  const { data, loading, error, refetch } = useQuery<GetShiftRequestsData>(GET_SHIFT_REQUESTS);
+
+  const [cancelRequest, { loading: canceling, error: cancelError, data: cancelData }] =
+    useMutation(CANCEL_SHIFT_REQUEST, {
+      onCompleted: () => refetch(),
+    });
+
+  const handleCancel = async (requestId: string) => {
+    try {
+      await cancelRequest({ variables: { requestId } });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const sanitizedRequests = useMemo(() => {
+    const requests = data?.myShiftRequests ?? [];
+    return sanitizeShiftRequests(requests);
+  }, [data?.myShiftRequests]);
 
   return (
-    <section className="mb-12">
+    <section className="mb-12 px-4">
       <h2 className="text-2xl font-semibold text-grayLight border-b border-grayLighter pb-3 mb-6">
-        Shift Requests
+        Your Shift Requests
       </h2>
-      <ul className="space-y-5">
-        {sanitizedRequests.length === 0 ? (
-          <li className="text-orange italic">No requests submitted.</li>
-        ) : (
-          sanitizedRequests.map((req) => {
-            const { shift } = req;
-            const isValid =
-              shift.start instanceof Date &&
-              !isNaN(shift.start.getTime()) &&
-              shift.end instanceof Date &&
-              !isNaN(shift.end.getTime());
 
-            return (
-              <li
-                key={req.id}
-                className="bg-lightBeige rounded-2xl shadow-md border border-accent hover:shadow-lg transition-shadow p-6"
-              >
-                <div className="text-xl font-medium text-burgundyLight">{shift.title}</div>
-                <div className="text-sm text-grayDarker mt-2">
-                  {isValid ? (
-                    <>
-                      {shift.start.toLocaleString()} – {shift.end.toLocaleString()}
-                    </>
-                  ) : (
-                    <span className="text-orangeLight italic">Invalid date</span>
+      {loading ? (
+        <p className="text-grayDark">Loading your requests...</p>
+      ) : error ? (
+        <>
+        {console.error('Shift request error:', error)}
+        <p className="text-errorRed">Error loading shift requests.</p>
+      </>
+      ) : (
+        <ul className="space-y-5">
+          {sanitizedRequests.length === 0 ? (
+            <li className="text-orange italic">No requests submitted.</li>
+          ) : (
+            sanitizedRequests.map((req) => {
+              const { shift } = req;
+              const isValid =
+                shift.start instanceof Date &&
+                !isNaN(shift.start.getTime()) &&
+                shift.end instanceof Date &&
+                !isNaN(shift.end.getTime());
+
+              return (
+                <li
+                  key={req.id}
+                  className="bg-lightBeige rounded-2xl shadow-md border border-accent hover:shadow-lg transition-shadow p-6"
+                >
+                  <div className="text-xl font-medium text-burgundyLight">{shift.title}</div>
+                  <div className="text-sm text-grayDarker mt-1">
+                    {isValid ? (
+                      <>
+                        {shift.start.toLocaleString()} – {shift.end.toLocaleString()}
+                      </>
+                    ) : (
+                      <span className="text-orangeLight italic">Invalid date</span>
+                    )}
+                  </div>
+                  <div className="mt-2 text-sm">
+                    <span className="font-semibold text-grayDark">Request Status:</span>{' '}
+                    <span className="text-grayDark capitalize">{req.status}</span>
+                  </div>
+
+                  {req.status.toLowerCase() !== 'cancelled' && (
+                    <button
+                      onClick={() => handleCancel(req.id)}
+                      disabled={canceling}
+                      className="mt-4 bg-errorRed text-white px-4 py-2 rounded hover:bg-red-700 transition-colors disabled:opacity-60"
+                    >
+                      {canceling ? 'Cancelling...' : 'Cancel Request'}
+                    </button>
                   )}
-                </div>
-                <div className="mt-3 text-sm">
-                  <span className="font-semibold text-grayDark">Request Status:</span>{' '}
-                  <span className="text-grayDark">{req.status}</span>
-                </div>
-              </li>
-            );
-          })
-        )}
-      </ul>
+
+                  {cancelData?.cancelShiftRequest?.id === req.id && (
+                    <p className="mt-2 text-successGreen text-sm">Request cancelled!</p>
+                  )}
+
+                  {cancelError && (
+                    <p className="mt-2 text-errorRed text-sm">
+                      Error: {cancelError.message}
+                    </p>
+                  )}
+                </li>
+              );
+            })
+          )}
+        </ul>
+      )}
     </section>
   );
 }

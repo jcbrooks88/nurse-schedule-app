@@ -104,6 +104,7 @@ enum RequestStatus {
   REJECTED
   CONFIRMED
   SWAPPED
+  CANCELLED
 }
 
 enum SwapStatus {

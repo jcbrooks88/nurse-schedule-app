@@ -5,13 +5,11 @@ const prisma = new PrismaClient();
 export const shiftResolver = {
   Query: {
     shifts: async () => {
-      return await prisma.shift.findMany({
+      return prisma.shift.findMany({
+        where: { status: { not: 'CANCELLED' } },
         include: {
           createdBy: true,
           assignedTo: true,
-        },
-        where: {
-          status: { not: "CANCELLED" },
         },
         orderBy: { start: 'asc' },
       });
@@ -19,18 +17,10 @@ export const shiftResolver = {
   },
 
   Mutation: {
-    createShift: async (
-      _: any,
-      { input }: { input: { [key: string]: any } },
-      { user }: { user: { id: string; role: string } }
-    ) => {
+    createShift: async (_: any, { input }: any, { user }: any) => {
       if (!user || user.role !== 'ADMIN') throw new Error('Unauthorized');
-      return await prisma.shift.create({
+      return prisma.shift.create({
         data: {
-          title: input.title,
-          start: input.start,
-          end: input.end,
-          // include any other required fields here
           ...input,
           createdById: user.id,
         },
@@ -39,7 +29,7 @@ export const shiftResolver = {
 
     updateShift: async (_: any, { id, input }: any, { user }: any) => {
       if (!user || user.role !== 'ADMIN') throw new Error('Unauthorized');
-      return await prisma.shift.update({
+      return prisma.shift.update({
         where: { id },
         data: input,
       });
@@ -47,18 +37,9 @@ export const shiftResolver = {
 
     deleteShift: async (_: any, { id }: any, { user }: any) => {
       if (!user || user.role !== 'ADMIN') throw new Error('Unauthorized');
-      return await prisma.shift.delete({ where: { id } });
+      return prisma.shift.delete({
+        where: { id },
+      });
     },
-
-    requestShift: async (_: any, { shiftId }: any, { user, prisma }: any) => {
-      if (!user) throw new Error("Not authenticated");
-
-      return prisma.shiftRequest.create({
-      data: {
-        shiftId,
-        requesterId: user.id,
-      },
-    });
-  },
   },
 };

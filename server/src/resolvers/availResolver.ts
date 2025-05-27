@@ -1,15 +1,11 @@
-import { PrismaClient } from "@prisma/client";
-import { isAuthenticated } from "../middleware/auth";
+import { PrismaClient } from '@prisma/client';
+import { isAuthenticated } from '../middleware/auth';
 
 const prisma = new PrismaClient();
 
-export const availabilityResolvers = {
+export const availabilityResolver = {
   Query: {
-    getAvailability: async (
-      _: unknown,
-      args: { userId: string; month: string }
-    ) => {
-      const { userId, month } = args;
+    getAvailability: async (_: unknown, { userId, month }: { userId: string; month: string }) => {
       const start = new Date(`${month}-01`);
       const end = new Date(start);
       end.setMonth(end.getMonth() + 1);
@@ -17,21 +13,14 @@ export const availabilityResolvers = {
       return prisma.availability.findMany({
         where: {
           userId,
-          date: {
-            gte: start,
-            lt: end,
-          },
+          date: { gte: start, lt: end },
         },
       });
     },
   },
+
   Mutation: {
-    setAvailability: async (
-      _: unknown,
-      args: { date: string; isAvailable: boolean },
-      context: any
-    ) => {
-      const { date, isAvailable } = args;
+    setAvailability: async (_: unknown, { date, isAvailable }: { date: string; isAvailable: boolean }, context: any) => {
       const user = isAuthenticated(context.req, context.res, context.next);
       const parsedDate = new Date(date);
 
@@ -42,9 +31,7 @@ export const availabilityResolvers = {
             date: parsedDate,
           },
         },
-        update: {
-          isAvailable,
-        },
+        update: { isAvailable },
         create: {
           userId: user.id,
           date: parsedDate,

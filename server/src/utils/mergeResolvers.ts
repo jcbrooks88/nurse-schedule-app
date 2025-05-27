@@ -1,12 +1,19 @@
-import { mergeResolvers } from '@graphql-tools/merge';
 import { authResolver } from '../resolvers/authResolver';
+import { availabilityResolver } from '../resolvers/availResolver';
 import { shiftResolver } from '../resolvers/shiftResolver';
 import { shiftRequestSwapResolver } from '../resolvers/swapResolver';
-import { availabilityResolvers } from '../resolvers/availResolver';
 
-export const resolvers = mergeResolvers([
-  authResolver,
-  shiftResolver,
-  shiftRequestSwapResolver,
-  availabilityResolvers,
-]);
+export const resolvers = {
+  Query: {
+    ...authResolver.Query,
+    ...availabilityResolver.Query,
+    ...shiftResolver.Query,
+    ...shiftRequestSwapResolver.Query,
+  },
+  Mutation: {
+    ...authResolver.Mutation,
+    ...availabilityResolver.Mutation,
+    ...shiftResolver.Mutation,
+    ...shiftRequestSwapResolver.Mutation,
+  },
+};
