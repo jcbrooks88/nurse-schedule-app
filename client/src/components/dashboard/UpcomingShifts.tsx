@@ -6,13 +6,11 @@ interface Shift {
   status: string;
 }
 
-// SanitizedShift has start and end guaranteed to be Date objects
 interface SanitizedShift extends Omit<Shift, 'start' | 'end'> {
   start: Date;
   end: Date;
 }
 
-// Convert any string dates to Date objects
 function sanitizeShifts(shifts: Shift[]): SanitizedShift[] {
   return shifts.map((shift) => ({
     ...shift,
@@ -25,16 +23,15 @@ export default function UpcomingShifts({ shifts }: { shifts: Shift[] }) {
   const sanitizedShifts = sanitizeShifts(shifts);
 
   return (
-    <section className="mb-10">
-      <h2 className="text-xl font-semibold text-grayLight border-b-2 border-grayLighter pb-2 mb-4">
+    <section className="mb-12">
+      <h2 className="text-2xl font-semibold text-grayLight border-b border-grayLighter pb-3 mb-6">
         Upcoming Shifts
       </h2>
-      <ul className="space-y-4">
+      <ul className="space-y-5">
         {sanitizedShifts.length === 0 ? (
           <li className="text-accent italic">No upcoming shifts.</li>
         ) : (
           sanitizedShifts.map((shift) => {
-            // Check if start and end are valid dates
             const isValid =
               shift.start instanceof Date &&
               !isNaN(shift.start.getTime()) &&
@@ -44,13 +41,10 @@ export default function UpcomingShifts({ shifts }: { shifts: Shift[] }) {
             return (
               <li
                 key={shift.id}
-                className="bg-lightBeige rounded-xl shadow-card border border-accent hover:shadow-md transition-shadow p-5"
+                className="bg-lightBeige rounded-2xl shadow-md border border-accent hover:shadow-lg transition-shadow p-6"
               >
-                <div className="text-lg font-semibold text-burgundyLight">
-                  {shift.title}
-                </div>
-
-                <div className="text-sm text-grayDarker mt-1">
+                <div className="text-xl font-medium text-burgundyLight">{shift.title}</div>
+                <div className="text-sm text-grayDarker mt-2">
                   {isValid ? (
                     <>
                       {shift.start.toLocaleString()} – {shift.end.toLocaleString()}
@@ -59,9 +53,8 @@ export default function UpcomingShifts({ shifts }: { shifts: Shift[] }) {
                     <span className="text-orangeLight italic">Invalid date</span>
                   )}
                 </div>
-
-                <div className="mt-2 text-sm">
-                  <span className="font-medium text-grayDarker">Status:</span>{' '}
+                <div className="mt-3 text-sm">
+                  <span className="font-semibold text-grayDark">Status:</span>{' '}
                   <span className="text-grayDark">{shift.status}</span>
                 </div>
               </li>

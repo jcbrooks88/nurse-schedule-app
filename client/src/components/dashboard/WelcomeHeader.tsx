@@ -8,47 +8,39 @@ export default function WelcomeHeader() {
   });
 
   const user = data?.me;
-  const avatarUrl = user?.email ? `https://i.pravatar.cc/40?u=${user.email}` : '';
 
   if (loading || error || !user) return null;
 
   return (
-    <div className="bg-lightBeige rounded-xl shadow-card border border-accent hover:shadow-md transition-shadow p-6 mb-10 flex flex-col md:flex-row md:justify-between md:items-center">
+    <div className="bg-lightBeige rounded-2xl shadow-lg border border-accent transition-shadow hover:shadow-xl p-6 mb-12 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-bold text-burgundyLight mb-1">
+        <h1 className="text-3xl font-semibold text-burgundyLight mb-2">
           Welcome back{user.name ? `, ${user.name.split(' ')[0]}` : ''}!
         </h1>
-        <p className="text-sm text-grayDark">
-          Here's your shift schedule and recent activity.
+        <p className="text-base text-grayDark mb-3">
+          Here’s your shift schedule and recent activity.
         </p>
 
-        <div className="mt-3 flex space-x-4">
+        <div className="flex flex-wrap gap-3">
           <Link
             to="/availability"
-            className="text-sm text-teal hover:text-darkMossGreen underline"
+            className="text-sm font-medium text-teal hover:text-darkMossGreen transition-colors underline underline-offset-2"
           >
             View Availability
           </Link>
           <Link
             to="/requests"
-            className="text-sm text-teal hover:text-darkMossGreen underline"
+            className="text-sm font-medium text-teal hover:text-darkMossGreen transition-colors underline underline-offset-2"
           >
             View Requests
           </Link>
         </div>
       </div>
 
-      <div className="mt-4 md:mt-0 flex items-center space-x-4">
-        <div className="text-sm text-grayDark space-y-1 text-right">
-          <div><strong>Role:</strong> {user.role || 'Nurse'}</div>
+      <div className="md:text-right text-sm text-grayDark">
+        <div className="bg-white/50 border border-accent px-4 py-2 rounded-lg shadow-sm inline-block">
+          <span className="font-semibold">Role:</span> {user.role || 'Nurse'}
         </div>
-        {avatarUrl && (
-          <img
-            src={avatarUrl}
-            alt={`${user.name || 'User'}'s profile`}
-            className="w-12 h-12 rounded-full object-cover border border-gray-300"
-          />
-        )}
       </div>
     </div>
   );

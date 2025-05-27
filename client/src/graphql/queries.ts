@@ -13,8 +13,11 @@ export const GET_AVAILABILITY = gql`
 export const GET_DASHBOARD_DATA = gql`
   query GetDashboardData {
     me {
+      id
       name
+      email
       role
+      createdAt
       assignedShifts {
         id
         title
@@ -25,15 +28,17 @@ export const GET_DASHBOARD_DATA = gql`
       shiftRequests {
         id
         status
+        createdAt
         shift {
+          id
           title
           start
-          end
         }
       }
     }
   }
 `;
+
 
 export const GET_SHIFTS = gql`
   query GetShifts {

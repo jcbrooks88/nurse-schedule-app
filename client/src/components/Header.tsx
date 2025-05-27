@@ -1,14 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import LogoutButton from './LogoutButton';
 import { GET_ME } from '../graphql/queries';
+import LogoutButton from './LogoutButton';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
-  const { data, loading, error } = useQuery(GET_ME, {
-    fetchPolicy: 'cache-first',
-  });
+  const { data, loading, error } = useQuery(GET_ME, { fetchPolicy: 'cache-first' });
 
   const user = data?.me
     ? {
@@ -18,21 +16,20 @@ const Header: React.FC = () => {
     : null;
 
   return (
-    <header className="bg-grayLight shadow-card border border-grayDarker hover:shadow-md transition-shadow sticky top-0 z-50 w-full">
+    <header className="sticky top-0 z-50 w-full bg-grayLight border border-grayDarker shadow-card hover:shadow-md transition-shadow">
       <div className="max-w-7xl mx-auto px-6 py-3">
-        <div className="flex justify-between items-center">
-          {/* App Name */}
+        <div className="flex items-center justify-between">
+          {/* Logo / App Name */}
           <div
-            className="text-2xl font-semibold text-white cursor-pointer tracking-tight"
+            className="text-2xl font-semibold text-white tracking-tight cursor-pointer"
             onClick={() => navigate(user ? '/dashboard' : '/')}
           >
             MedShift Manager
           </div>
 
-          {/* Right Side */}
+          {/* Right Section */}
           {user ? (
             <div className="flex items-center gap-6">
-              {/* User Info */}
               <div className="flex items-center gap-3">
                 <img
                   src={user.avatarUrl}
@@ -41,18 +38,19 @@ const Header: React.FC = () => {
                 />
                 <span className="text-sm font-medium text-white">{user.name}</span>
               </div>
-
-              {/* Logout */}
               <LogoutButton />
             </div>
-          ) : !loading && !error ? (
-            <button
-              onClick={() => navigate('/login')}
-              className="bg-accent hover:bg-accentDark text-white text-sm font-semibold px-4 py-2 rounded transition"
-            >
-              Login
-            </button>
-          ) : null}
+          ) : (
+            !loading &&
+            !error && (
+              <button
+                onClick={() => navigate('/login')}
+                className="px-4 py-2 text-sm font-semibold text-white bg-accent rounded hover:bg-accentDark transition"
+              >
+                Login
+              </button>
+            )
+          )}
         </div>
       </div>
     </header>
@@ -60,4 +58,3 @@ const Header: React.FC = () => {
 };
 
 export default Header;
-

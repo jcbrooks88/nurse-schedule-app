@@ -13,6 +13,7 @@ const config = {
         orange: "#cc5f3a",       // Orange
         orangeLight: "#e58b6c",       // Light Orange
         teal: "#197f7f",     // Teal
+        tealLight: "#4ca3a3",     // Teal
         beige: "##eae2d8",    // Beige
         burgundy: "#8c3030",    // Burgundy
         burgundyLight: "#a54a4a",    // Light Burgundy
