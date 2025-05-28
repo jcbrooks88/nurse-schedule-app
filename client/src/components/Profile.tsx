@@ -29,51 +29,61 @@ interface MeData {
 export default function Profile() {
   const { data, loading, error } = useQuery<MeData>(GET_ME);
 
-  if (loading) return <p className="p-4">Loading profile...</p>;
-  if (error) return <p className="p-4 text-red-500">Error: {error.message}</p>;
+  if (loading) return <p className="p-4 text-grayDark">Loading profile...</p>;
+  if (error) return <p className="p-4 text-burgundy">Error: {error.message}</p>;
+  if (!data?.me) return <p className="p-4 text-burgundy">Profile data not available.</p>;
 
-  if (!data || !data.me) return <p className="p-4 text-red-500">Profile data not available.</p>;
   const { name, email, assignedShifts, shiftRequests } = data.me;
 
   return (
-    <div className="max-w-2xl mx-auto mt-8 p-6 bg-white rounded shadow space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-2">Your Profile</h2>
-        <p><strong>Name:</strong> {name}</p>
-        <p><strong>Email:</strong> {email}</p>
-            {shiftRequests.map((req: ShiftRequest) => (
-              <li key={req.id} className="p-2 bg-blue-100 rounded">
-                Requested: <strong>{req.shift.title}</strong> on {new Date(req.shift.start).toLocaleDateString()} — Status: <em>{req.status}</em>
-              </li>
-            ))}
-        <h3 className="text-xl font-semibold mb-2">Assigned Shifts</h3>
-        {assignedShifts.length === 0 ? (
-          <p>No assigned shifts yet.</p>
-        ) : (
-          <ul className="space-y-1">
-            {assignedShifts.map(shift => (
-              <li key={shift.id} className="p-2 bg-gray-100 rounded">
-                <strong>{shift.title}</strong> — {new Date(shift.start).toLocaleString()} to {new Date(shift.end).toLocaleString()} [{shift.status}]
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-card rounded-2xl shadow-card border border-accent space-y-8">
+      <section>
+        <h2 className="text-3xl font-semibold text-burgundyLight mb-4">Your Profile</h2>
+        <div className="text-grayDark space-y-2">
+          <p><span className="font-semibold">Name:</span> {name}</p>
+          <p><span className="font-semibold">Email:</span> {email}</p>
+        </div>
+      </section>
 
-      <div>
-        <h3 className="text-xl font-semibold mb-2">Shift Requests</h3>
-        {shiftRequests.length === 0 ? (
-          <p>No shift requests submitted.</p>
+      <section>
+        <h3 className="text-2xl font-semibold text-teal mb-3">Assigned Shifts</h3>
+        {assignedShifts.length === 0 ? (
+          <p className="text-grayLight italic">No assigned shifts yet.</p>
         ) : (
-          <ul className="space-y-1">
-            {shiftRequests.map(req => (
-              <li key={req.id} className="p-2 bg-blue-100 rounded">
-                Requested: <strong>{req.shift.title}</strong> on {new Date(req.shift.start).toLocaleDateString()} — Status: <em>{req.status}</em>
+          <ul className="space-y-3">
+            {assignedShifts.map(shift => (
+              <li
+                key={shift.id}
+                className="p-3 bg-white rounded-lg border border-accent shadow-sm text-sm text-grayDark"
+              >
+                <strong className="text-burgundyLight">{shift.title}</strong> —{' '}
+                {new Date(shift.start).toLocaleString()} to {new Date(shift.end).toLocaleString()} —{' '}
+                <span className="italic text-orange">{shift.status}</span>
               </li>
             ))}
           </ul>
         )}
-      </div>
+      </section>
+
+      <section>
+        <h3 className="text-2xl font-semibold text-teal mb-3">Shift Requests</h3>
+        {shiftRequests.length === 0 ? (
+          <p className="text-grayLight italic">No shift requests submitted.</p>
+        ) : (
+          <ul className="space-y-3">
+            {shiftRequests.map(req => (
+              <li
+                key={req.id}
+                className="p-3 bg-lightBeige rounded-lg border border-orangeLight shadow-sm text-sm text-grayDark"
+              >
+                Requested: <strong className="text-burgundyLight">{req.shift.title}</strong> on{' '}
+                {new Date(req.shift.start).toLocaleDateString()} —{' '}
+                <span className="italic text-orange">{req.status}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

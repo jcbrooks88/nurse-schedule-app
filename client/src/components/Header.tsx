@@ -38,6 +38,12 @@ const Header: React.FC = () => {
                 />
                 <span className="text-sm font-medium text-white">{user.name}</span>
               </div>
+              <button
+                onClick={() => navigate('/profile')}
+                className="px-4 py-2 text-sm font-semibold text-white bg-transparent rounded hover:bg-accentDark transition"
+              >
+                Profile
+              </button>
               <LogoutButton />
             </div>
           ) : (

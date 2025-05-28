@@ -25,13 +25,13 @@ export default function DashboardComponent() {
   }
 
   const { me } = data;
-  const { assignedShifts = [], shiftRequests = [] } = me;
-
+  const { assignedShifts = [] } = me;
+  
   return (
     <div className="p-6 md:p-10 bg-card min-h-screen font-sans">
       <WelcomeHeader />
       <UpcomingShifts shifts={assignedShifts} />
-      <ShiftRequests requests={shiftRequests} />
+      <ShiftRequests />
     </div>
   );
 }

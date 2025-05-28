@@ -113,7 +113,7 @@ export default function ShiftRequests() {
                     <button
                       onClick={() => handleCancel(req.id)}
                       disabled={canceling}
-                      className="mt-4 bg-errorRed text-white px-4 py-2 rounded hover:bg-red-700 transition-colors disabled:opacity-60"
+                      className="mt-4 bg-errorRed text-white bg-burgundyLight px-4 py-2 rounded hover:bg-burgundy transition-colors disabled:opacity-60"
                     >
                       {canceling ? 'Cancelling...' : 'Cancel Request'}
                     </button>

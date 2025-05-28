@@ -2,8 +2,10 @@ import Profile from '../components/Profile';
 
 export default function ProfilePage() {
   return (
-    <div className="p-6">
-      <Profile />
+    <div className="bg-background min-h-screen p-6 sm:p-10">
+      <div className="max-w-5xl mx-auto">
+        <Profile />
+      </div>
     </div>
   );
 }
