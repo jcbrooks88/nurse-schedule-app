@@ -92,7 +92,7 @@ export default function ShiftRequests() {
               return (
                 <li
                   key={req.id}
-                  className="bg-lightBeige rounded-2xl shadow-md border border-accent hover:shadow-lg transition-shadow p-6"
+                  className="bg-white/80 rounded-2xl shadow-md border border-accent hover:shadow-lg transition-shadow p-6"
                 >
                   <div className="text-xl font-medium text-burgundyLight">{shift.title}</div>
                   <div className="text-sm text-grayDarker mt-1">
@@ -101,7 +101,7 @@ export default function ShiftRequests() {
                         {shift.start.toLocaleString()} – {shift.end.toLocaleString()}
                       </>
                     ) : (
-                      <span className="text-orangeLight italic">Invalid date</span>
+                      <span className="text-grayLighter italic">Invalid date</span>
                     )}
                   </div>
                   <div className="mt-2 text-sm">

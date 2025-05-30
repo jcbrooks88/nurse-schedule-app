@@ -14,17 +14,18 @@ const config = {
         orangeLight: "#e58b6c",       // Light Orange
         teal: "#197f7f",     // Teal
         tealLight: "#4ca3a3",     // Teal
-        beige: "##eae2d8",    // Beige
         burgundy: "#8c3030",    // Burgundy
         burgundyLight: "#a54a4a",    // Light Burgundy
         accent: "#b2a897",     // Darker Beige
-        lightBeige: "#ede9e1",   // Light Beige
         grayLighter: "#8c8c8c",      // Lighter Gray
         grayLight: "#6f6f6f",      // Light Gray
         grayDark: "#4b4b4b",      // Dark Gray
         grayDarker: "#3a3a3a",      // Darker Gray
+        lightBeige: "#ede9e1",   // Light Beige
         background: "#e6e0d6", // Background Color (base Beige)
         card: "#d9d2c6", // Card (Light Beige)
+        softNeutral: "#d1ccc4", // Soft Taupe/Neutral Background
+        mushroom: "#cfc9bf" // Muted Mushroom Gray
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],

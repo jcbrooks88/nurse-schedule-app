@@ -94,3 +94,18 @@ export const CANCEL_SHIFT_REQUEST = gql`
     }
   }
 `;
+
+export const APPROVE_SHIFT_REQUEST = gql`
+mutation ApproveShiftRequest($requestId: ID!) {
+  approveShiftRequest(requestId: $requestId) {
+    id
+    status
+  }
+}
+`;
+
+export const REJECT_SHIFT_REQUEST = gql`
+mutation RejectShiftRequest($requestId: ID!) {
+  rejectShiftRequest(requestId: $requestId)
+}
+`;

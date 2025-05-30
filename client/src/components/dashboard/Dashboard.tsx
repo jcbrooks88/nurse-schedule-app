@@ -17,21 +17,40 @@ export default function DashboardComponent() {
   }, [token, navigate]);
 
   if (loading) {
-    return <div className="text-center py-10 text-teal text-lg">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-xl text-teal animate-pulse">Loading your dashboard...</div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-center py-10 text-burgundy text-lg">Error loading dashboard data.</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-xl text-burgundy font-semibold">Something went wrong. Please try again later.</div>
+      </div>
+    );
   }
 
   const { me } = data;
   const { assignedShifts = [] } = me;
-  
+
   return (
-    <div className="p-6 md:p-10 bg-card min-h-screen font-sans">
-      <WelcomeHeader />
-      <UpcomingShifts shifts={assignedShifts} />
-      <ShiftRequests />
-    </div>
+    
+      <div className="max-w-6xl mx-auto space-y-8">
+        <div className="bg-background shadow-lg rounded-2xl p-6 md:p-10">
+          <WelcomeHeader />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-background shadow-md rounded-2xl p-6">
+            <UpcomingShifts shifts={assignedShifts} />
+          </div>
+          <div className="bg-background shadow-md rounded-2xl p-6">
+            <ShiftRequests />
+          </div>
+        </div>
+      </div>
+    
   );
 }

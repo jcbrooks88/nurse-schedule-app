@@ -1,111 +1,166 @@
-import { PrismaClient, ShiftStatus, RequestStatus, Role } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { PrismaClient } from '@prisma/client';
+import { addDays, startOfDay, addHours } from 'date-fns';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
+const NUM_DAYS = 30;
 
-export async function main() {
-  console.log('🌱 Resetting and seeding database...');
+async function main() {
+  console.log('🌱 Seeding database...');
 
-  const hashedPassword = await bcrypt.hash('password123', 10);
-
-  // Clear the database in order of relationships
+  // Cleanup
+  await prisma.shiftSwap.deleteMany();
   await prisma.shiftRequest.deleteMany();
-  console.log('🗑️ Deleted all shift requests');
-
+  await prisma.availability.deleteMany();
   await prisma.shift.deleteMany();
-  console.log('🗑️ Deleted all shifts');
-
   await prisma.user.deleteMany();
-  console.log('🗑️ Deleted all users');
 
-  // Create users (no need for upsert since we just cleared the DB)
-  const admin = await prisma.user.create({
-    data: {
-      email: 'admin@example.com',
-      name: 'Alice Admin',
-      role: Role.ADMIN,
-      password: hashedPassword,
-    },
-  });
+  // Hash passwords
+  const hashedAdminPassword = await bcrypt.hash('admin123', 10);
+  const hashedNursePassword = await bcrypt.hash('nurse123', 10);
 
-  const nurse = await prisma.user.create({
-    data: {
-      email: 'nancy@example.com',
-      name: 'Nancy Nurse',
-      role: Role.NURSE,
-      password: hashedPassword,
-    },
-  });
+  // Seed users
+  const [admin, nurse1, nurse2, nurse3] = await Promise.all([
+    prisma.user.create({
+      data: {
+        name: 'Alice Admin',
+        email: 'admin@nursepro.com',
+        password: hashedAdminPassword,
+        role: 'ADMIN',
+      },
+    }),
+    prisma.user.create({
+      data: {
+        name: 'Nancy Nurse',
+        email: 'nancy@nursepro.com',
+        password: hashedNursePassword,
+        role: 'NURSE',
+      },
+    }),
+    prisma.user.create({
+      data: {
+        name: 'Nick Nurse',
+        email: 'nick@nursepro.com',
+        password: hashedNursePassword,
+        role: 'NURSE',
+      },
+    }),
+    prisma.user.create({
+      data: {
+        name: 'Nora Nurse',
+        email: 'nora@nursepro.com',
+        password: hashedNursePassword,
+        role: 'NURSE',
+      },
+    }),
+  ]);
 
-  // Use current date/time as base for shifts
-  const now = new Date();
+  const nurses = [nurse1, nurse2, nurse3];
+  const allShifts = [];
+  const openShifts: typeof prisma.shift[] = [];
 
-  // Create shifts with start/end as Date objects relative to now
-  const shift1 = await prisma.shift.create({
-    data: {
-      title: 'Day Shift - ER',
-      start: new Date(now.getTime() + 86400000 * 1), // +1 day
-      end: new Date(now.getTime() + 86400000 * 1 + 8 * 3600000), // +1 day + 8 hours
-      status: ShiftStatus.CONFIRMED,
-      assignedToId: nurse.id,
-      createdById: admin.id,
-    },
-  });
+  // Define shifts with explicit typing to ensure startHour and endHour are numbers
+  const shiftConfigs: [string, number, number, string][] = [
+    ['Morning Shift', 8, 16, 'General patient care'],
+    ['Evening Shift', 16, 24, 'Ward supervision'],
+    ['Night Shift', 0, 8, 'Overnight emergency response'],
+  ];
 
-  const shift2 = await prisma.shift.create({
-    data: {
-      title: 'Night Shift - ICU',
-      start: new Date(now.getTime() + 86400000 * 2), // +2 days
-      end: new Date(now.getTime() + 86400000 * 2 + 8 * 3600000), // +2 days + 8 hours
-      status: ShiftStatus.CONFIRMED,
-      assignedToId: nurse.id,
-      createdById: admin.id,
-    },
-  });
+  // Generate 3 shifts per day for 30 days
+  for (let day = 0; day < NUM_DAYS; day++) {
+    const baseDate = startOfDay(addDays(new Date(), day));
 
-  const shift3 = await prisma.shift.create({
-    data: {
-      title: 'Float Pool - AM',
-      start: new Date(now.getTime() + 86400000 * 3), // +3 days
-      end: new Date(now.getTime() + 86400000 * 3 + 8 * 3600000), // +3 days + 8 hours
-      status: ShiftStatus.OPEN,
-      createdById: admin.id,
-    },
-  });
+    for (const shiftConfig of shiftConfigs) {
+      const [title, startHour, endHour, description] = shiftConfig;
+      const isForcedOpen = openShifts.length < 10;
+      const assignedToId = isForcedOpen ? null : Math.random() < 0.7 ? randomNurse(nurses).id : null;
 
-  const shift4 = await prisma.shift.create({
-    data: {
-      title: 'Float Pool - PM',
-      start: new Date(now.getTime() + 86400000 * 4), // +4 days
-      end: new Date(now.getTime() + 86400000 * 4 + 8 * 3600000), // +4 days + 8 hours
-      status: ShiftStatus.OPEN,
-      createdById: admin.id,
-    },
-  });
+      const shift = await prisma.shift.create({
+        data: {
+          title,
+          description,
+          start: addHours(baseDate, startHour),
+          end: addHours(baseDate, endHour),
+          createdById: admin.id,
+          status: getRandomShiftStatus(),
+          assignedToId,
+        },
+      });
 
-  // Create shift requests linked to nurse and shifts
-  await prisma.shiftRequest.create({
-    data: {
-      requesterId: nurse.id,
-      shiftId: shift3.id,
-      status: RequestStatus.PENDING,
-    },
-  });
+      allShifts.push(shift);
+      if (!assignedToId && openShifts.length < 10) {
+        openShifts.push(shift);
+      }
+    }
+  }
 
-  await prisma.shiftRequest.create({
-    data: {
-      requesterId: nurse.id,
-      shiftId: shift4.id,
-      status: RequestStatus.CONFIRMED,
-    },
-  });
+  // Seed availability
+  for (const nurse of nurses) {
+    for (let i = 0; i < NUM_DAYS; i++) {
+      const date = addDays(new Date(), i);
+      await prisma.availability.create({
+        data: {
+          userId: nurse.id,
+          date,
+          isAvailable: Math.random() > 0.3,
+        },
+      });
+    }
+  }
 
-  console.log('✅ Seed complete!');
-  await prisma.$disconnect();
+  // Create shift requests
+  let shiftRequestCount = 0;
+  for (const shift of openShifts) {
+    const requesters = nurses.slice().sort(() => Math.random() - 0.5).slice(0, 2);
+
+    await prisma.shiftRequest.create({
+      data: {
+        shiftId: shift.id,
+        requesterId: requesters[0].id,
+        status: 'PENDING',
+      },
+    });
+    console.log(`Created PENDING request: shift ${shift.id}, requester ${requesters[0].name}`);
+
+    await prisma.shiftRequest.create({
+      data: {
+        shiftId: shift.id,
+        requesterId: requesters[1].id,
+        status: Math.random() > 0.5 ? 'APPROVED' : 'REJECTED',
+      },
+    });
+
+    shiftRequestCount++;
+  }
+
+  // Create a shift swap if possible
+  const confirmedShifts = allShifts.filter((s) => s.assignedToId && s.status === 'CONFIRMED');
+  if (confirmedShifts.length >= 2) {
+    await prisma.shiftSwap.create({
+      data: {
+        fromShiftId: confirmedShifts[0].id,
+        toShiftId: confirmedShifts[1].id,
+        proposerId: confirmedShifts[0].assignedToId!,
+        status: 'PENDING',
+      },
+    });
+  }
+
+  console.log('✅ Seeding complete.');
 }
 
-main().catch((e) => {
-  console.error('❌ Error seeding database:', e);
-  prisma.$disconnect();
-  process.exit(1);
-});
+function randomNurse(nurses: { id: string }[]) {
+  return nurses[Math.floor(Math.random() * nurses.length)];
+}
+
+function getRandomShiftStatus(): string {
+  const statuses = ['PENDING', 'CONFIRMED', 'APPROVED', 'OPEN'];
+  return statuses[Math.floor(Math.random() * statuses.length)];
+}
+
+main()
+  .catch((e) => {
+    console.error('❌ Seeding error:', e);
+    process.exit(1);
+  })
+  .finally(() => prisma.$disconnect());

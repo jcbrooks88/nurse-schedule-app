@@ -100,3 +100,21 @@ export const GET_ME = gql`
     }
   }
 `;
+
+export const GET_PENDING_REQUESTS = gql`
+  query GetPendingRequests {
+    getPendingRequests {
+      id
+      status
+      requester {
+        name
+        email
+      }
+      shift {
+        title
+        start
+        end
+      }
+    }
+  }
+`;

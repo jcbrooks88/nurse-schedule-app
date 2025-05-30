@@ -22,6 +22,16 @@ export const shiftRequestSwapResolver = {
     },
   },
 
+    getPendingRequests: async (_parent: any, _args: any, { prisma }: any) => {
+      return await prisma.shiftRequest.findMany({
+        where: { status: 'PENDING' },
+        include: {
+        requester: true,
+        shift: true,
+        },
+      });
+    },
+
   Mutation: {
     requestShift: async (_: any, { input }: any, { user }: any) => {
       if (!user) throw new Error('Not authenticated');

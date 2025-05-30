@@ -36,7 +36,7 @@ export default function Profile() {
   const { name, email, assignedShifts, shiftRequests } = data.me;
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-card rounded-2xl shadow-card border border-accent space-y-8">
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-background rounded-2xl shadow-card border border-accent space-y-8">
       <section>
         <h2 className="text-3xl font-semibold text-burgundyLight mb-4">Your Profile</h2>
         <div className="text-grayDark space-y-2">

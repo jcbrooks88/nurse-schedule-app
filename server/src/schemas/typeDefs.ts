@@ -31,6 +31,8 @@ export const typeDefs = gql`
     PENDING
     ACCEPTED
     DECLINED
+    CONFIRMED
+    SWAPPED
   }
 
   """A registered user of the scheduling system."""
@@ -131,6 +133,8 @@ export const typeDefs = gql`
 
     """Returns a user's availability for a given month."""
     getAvailability(userId: String!, month: String!): [Availability!]!
+
+    getPendingRequests: [ShiftRequest]
   }
 
   type Mutation {
@@ -169,5 +173,9 @@ export const typeDefs = gql`
 
     """Cancels a pending shift request."""
     cancelShiftRequest(id: ID!): ShiftRequest!
+
+    approveShiftRequest(requestId: ID!): ShiftRequest!
+    
+    rejectShiftRequest(requestId: ID!): Boolean!
   }
 `;

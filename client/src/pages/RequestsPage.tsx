@@ -1,6 +1,6 @@
 export default function Request() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-softNeutral/50 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md bg-lightBeige border border-border p-8 rounded-2xl shadow-lg">
         <h1 className="text-2xl font-bold text-burgundyLight mb-6 text-center">
           Request a Shift

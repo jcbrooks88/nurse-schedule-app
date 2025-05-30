@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 
 import { AuthRoute } from './components/authentication/AuthRoute';
 import { PublicRoute } from './components/authentication/PublicRoute';
+import AdminDashboardPage from './pages/AdminPage';
 
 function AppContent() {
   const location = useLocation();
@@ -29,6 +30,7 @@ function AppContent() {
           <Route path="/availability" element={<AuthRoute><AvailabilityPage /></AuthRoute>} />
           <Route path="/requests" element={<AuthRoute><Requests /></AuthRoute>} />
           <Route path="/profile" element={<AuthRoute><Profile /></AuthRoute>} />
+          <Route path="/admin" element={<AuthRoute><AdminDashboardPage /></AuthRoute>} />
         </Routes>
       </main>
       {!hideHeaderFooter && <Footer />}

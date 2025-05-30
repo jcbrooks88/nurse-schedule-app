@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_ME } from '../graphql/queries';
-import LogoutButton from './LogoutButton';
+import LogoutButton from './UI/LogoutButton';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -11,6 +11,8 @@ const Header: React.FC = () => {
   const user = data?.me
     ? {
         name: data.me.name,
+        email: data.me.email,
+        role: data.me.role,
         avatarUrl: `https://i.pravatar.cc/40?u=${data.me.email}`,
       }
     : null;
@@ -21,7 +23,7 @@ const Header: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Logo / App Name */}
           <div
-            className="text-2xl font-semibold text-white tracking-tight cursor-pointer"
+            className="text-2xl font-semibold text-white/95 tracking-tight cursor-pointer"
             onClick={() => navigate(user ? '/dashboard' : '/')}
           >
             MedShift Manager
@@ -38,12 +40,24 @@ const Header: React.FC = () => {
                 />
                 <span className="text-sm font-medium text-white">{user.name}</span>
               </div>
+              {/* Profile Button */}
               <button
                 onClick={() => navigate('/profile')}
-                className="px-4 py-2 text-sm font-semibold text-white bg-transparent rounded hover:bg-accentDark transition"
+                className="px-4 py-2 text-sm font-semibold text-white/95 bg-transparent rounded hover:bg-accentDark transition"
               >
                 Profile
               </button>
+
+              {/* Admin Button - only visible to admin users */}
+              {user.role === 'ADMIN' && (
+                <button
+                  onClick={() => navigate('/admin')}
+                  className="px-4 py-2 text-sm font-semibold text-white bg-transparent rounded hover:bg-accentDark transition"
+                >
+                  Admin
+                </button>
+              )}
+
               <LogoutButton />
             </div>
           ) : (
