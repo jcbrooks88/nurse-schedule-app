@@ -33,12 +33,12 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4">
+    <div className="h-auto flex items-center justify-center bg-background px-4">
       <form
         onSubmit={handleSubmit}
         className="bg-card shadow-card rounded-2xl px-8 pt-8 pb-10 w-full max-w-md border border-accent"
       >
-        <h2 className="text-3xl font-extrabold text-center mb-6 text-orange tracking-tight font-sans">
+        <h2 className="text-3xl font-extrabold text-center mb-6 text-grayLight tracking-tight font-sans">
           Create an account
         </h2>
 
@@ -82,7 +82,7 @@ export default function SignUpForm() {
           )}
           <button
             type="submit"
-            className="w-full bg-teal text-white py-2 rounded-lg font-semibold hover:bg-opacity-90 transition duration-200 shadow-md"
+            className="w-full bg-teal text-white py-2 rounded-lg font-semibold hover:bg-opacity-85 transition duration-200 shadow-md"
             disabled={loading}
           >
             {loading ? 'Signing up...' : 'Sign Up'}
