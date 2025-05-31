@@ -1,11 +1,15 @@
 import { Link } from 'react-router-dom';
 import LoginForm from '../components/Login';
+import WelcomeHeader from '../components/WelcomeHeader';
 
 export default function Login() {
   return (
+    <> 
+    <WelcomeHeader />
+    <main>
     <div className="min-h-screen flex items-center justify-center bg-muted px-4 border border-accent">
       <div className="w-full max-w-md bg-background border border-border rounded-2xl shadow-xl p-8 space-y-6">
-        <h1 className="text-3xl font-bold text-center text-burgundyLight">
+        <h1 className="text-3xl font-semibold text-center text-burgundyLight/85">
           Welcome to MedShift Manager
         </h1>
 
@@ -26,5 +30,7 @@ export default function Login() {
         </div>
       </div>
     </div>
+    </main>
+    </>
   );
 }

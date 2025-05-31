@@ -38,7 +38,7 @@ export default function SignUpForm() {
         onSubmit={handleSubmit}
         className="bg-card shadow-card rounded-2xl px-8 pt-8 pb-10 w-full max-w-md border border-accent"
       >
-        <h2 className="text-3xl font-extrabold text-center mb-6 text-grayLight tracking-tight font-sans">
+        <h2 className="text-2xl font-medium text-center mb-6 text-grayLight/95 tracking-tight font-sans">
           Create an account
         </h2>
 
@@ -71,7 +71,7 @@ export default function SignUpForm() {
             required
           />
           {success && (
-            <p className="text-green-600 text-sm text-center">
+            <p className="text-teal text-sm text-center">
               Signup successful! Redirecting...
             </p>
           )}
@@ -82,7 +82,7 @@ export default function SignUpForm() {
           )}
           <button
             type="submit"
-            className="w-full bg-teal text-white py-2 rounded-lg font-semibold hover:bg-opacity-85 transition duration-200 shadow-md"
+            className="w-full bg-teal text-white/90 py-2 rounded-lg font-semibold hover:bg-opacity-85 transition duration-200 shadow-md"
             disabled={loading}
           >
             {loading ? 'Signing up...' : 'Sign Up'}

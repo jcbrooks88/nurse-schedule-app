@@ -38,12 +38,12 @@ const Header: React.FC = () => {
                   alt={`${user.name}'s avatar`}
                   className="w-10 h-10 rounded-full border border-gray-300 shadow-sm"
                 />
-                <span className="text-sm font-medium text-white">{user.name}</span>
+                <span className="text-sm font-medium text-white/90">{user.name}</span>
               </div>
               {/* Profile Button */}
               <button
                 onClick={() => navigate('/profile')}
-                className="px-4 py-2 text-sm font-semibold text-white/95 bg-transparent rounded hover:bg-accentDark transition"
+                className="px-4 py-2 text-sm font-medium text-white/90 bg-transparent rounded hover:bg-accentDark transition"
               >
                 Profile
               </button>
@@ -52,7 +52,7 @@ const Header: React.FC = () => {
               {user.role === 'ADMIN' && (
                 <button
                   onClick={() => navigate('/admin')}
-                  className="px-4 py-2 text-sm font-semibold text-white bg-transparent rounded hover:bg-accentDark transition"
+                  className="px-4 py-2 text-sm font-medium text-white/90 bg-transparent rounded hover:bg-accentDark transition"
                 >
                   Admin
                 </button>
@@ -65,7 +65,7 @@ const Header: React.FC = () => {
             !error && (
               <button
                 onClick={() => navigate('/login')}
-                className="px-4 py-2 text-sm font-semibold text-white bg-accent rounded hover:bg-accentDark transition"
+                className="px-4 py-2 text-sm font-medium text-white/90 bg-transparent rounded hover:bg-accentDark transition"
               >
                 Login
               </button>

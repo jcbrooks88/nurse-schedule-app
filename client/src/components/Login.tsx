@@ -28,7 +28,7 @@ export default function LoginForm() {
         onSubmit={handleSubmit}
         className="bg-card shadow-card rounded-2xl px-8 pt-8 pb-10 w-full max-w-full sm:max-w-md md:max-w-lg border border-accent"
         >
-        <h2 className="text-2xl font-semibold text-center mb-6 text-grayLight tracking-tight font-sans">
+        <h2 className="text-2xl font-medium text-center mb-6 text-grayLight/95 tracking-tight font-sans">
           Login here
         </h2>
 
@@ -59,7 +59,7 @@ export default function LoginForm() {
           )}
           <button
             type="submit"
-            className="w-full bg-teal text-white py-2 rounded-lg font-semibold hover:bg-opacity-85 transition duration-200 shadow-md"
+            className="w-full bg-teal text-white/90 py-2 rounded-lg font-semibold hover:bg-opacity-85 transition duration-200 shadow-md"
             disabled={loading}
           >
             {loading ? 'Logging in...' : 'Login'}
