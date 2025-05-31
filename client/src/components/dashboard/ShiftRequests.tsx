@@ -101,7 +101,7 @@ export default function ShiftRequests() {
                         {shift.start.toLocaleString()} – {shift.end.toLocaleString()}
                       </>
                     ) : (
-                      <span className="text-grayLighter italic">Invalid date</span>
+                      <span className="text-grayLighter italic">Future date</span>
                     )}
                   </div>
                   <div className="mt-2 text-sm">

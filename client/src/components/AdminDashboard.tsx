@@ -18,6 +18,30 @@ type ShiftRequest = {
   };
 };
 
+// Helper functions to format shift dates
+const formatShiftDate = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  const now = new Date();
+  if (isNaN(date.getTime()) || date > now) {
+    return "Future date";
+  }
+  return date.toLocaleString();
+};
+
+const formatShiftDay = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  const now = new Date();
+  if (isNaN(date.getTime()) || date > now) {
+    return "Future date";
+  }
+  return date.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
 export default function AdminDashboard() {
   const { data, loading, error } = useQuery(GET_PENDING_REQUESTS);
   const [approve, { loading: approving }] = useMutation(APPROVE_SHIFT_REQUEST);
@@ -44,7 +68,11 @@ export default function AdminDashboard() {
         },
       });
     } catch (err: unknown) {
-      setActionError(err instanceof Error ? `Failed to approve request: ${err.message}` : "Failed to approve request due to an unknown error.");
+      setActionError(
+        err instanceof Error
+          ? `Failed to approve request: ${err.message}`
+          : "Failed to approve request due to an unknown error."
+      );
     }
   };
 
@@ -68,13 +96,17 @@ export default function AdminDashboard() {
         },
       });
     } catch (err: unknown) {
-      setActionError(err instanceof Error ? `Failed to reject request: ${err.message}` : "Failed to reject request due to an unknown error.");
+      setActionError(
+        err instanceof Error
+          ? `Failed to reject request: ${err.message}`
+          : "Failed to reject request due to an unknown error."
+      );
     }
   };
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto mt-10 p-8 bg-background rounded-2xl shadow-grayDark border border-accent">
+      <div className="max-w-4xl mx-auto mt-10 p-8 bg-background rounded-2xl shadow-burgundy border border-burgundyLight">
         <h1 className="text-3xl font-bold text-grayDark mb-4">Pending Shift Requests</h1>
         <p className="text-grayDark animate-pulse">Loading shift requests...</p>
       </div>
@@ -92,7 +124,7 @@ export default function AdminDashboard() {
   const requests: ShiftRequest[] = data?.getPendingRequests ?? [];
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-background rounded-2xl  border border-grayDark space-y-8">
+    <div className="max-w-4xl mx-auto mt-10 p-6 bg-background rounded-2xl border border-burgundyLight space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold text-grayLight">Pending Shift Requests</h1>
         <span className="text-sm px-3 py-1 bg-grayLight/20 text-grayDarker rounded-full font-medium">
@@ -113,19 +145,14 @@ export default function AdminDashboard() {
           {requests.map((req) => (
             <li
               key={req.id}
-              className="group transition-transform hover:scale-[1.01] p-6 bg-white rounded-xl border border-grayLighter shadow-sm hover:shadow-md"
+              className="group transition-transform hover:scale-[1.01] p-6 bg-white rounded-xl border border-burgundyLight shadow-sm hover:shadow-md"
             >
               <div className="flex justify-between items-start">
                 <h2 className="text-xl font-semibold text-burgundyLight group-hover:text-tealLight transition-colors">
                   {req.shift.title}
                 </h2>
                 <div className="text-xs text-grayLight mt-1">
-                  {new Date(req.shift.start).toLocaleDateString(undefined, {
-                    weekday: "short",
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+                  {formatShiftDay(req.shift.start)}
                 </div>
               </div>
 
@@ -136,11 +163,11 @@ export default function AdminDashboard() {
                 </p>
                 <p>
                   <span className="font-medium">Start:</span>{" "}
-                  {new Date(req.shift.start).toLocaleString()}
+                  {formatShiftDate(req.shift.start)}
                 </p>
                 <p>
                   <span className="font-medium">End:</span>{" "}
-                  {new Date(req.shift.end).toLocaleString()}
+                  {formatShiftDate(req.shift.end)}
                 </p>
               </div>
 

@@ -33,57 +33,90 @@ export default function Profile() {
   if (error) return <p className="p-4 text-burgundy">Error: {error.message}</p>;
   if (!data?.me) return <p className="p-4 text-burgundy">Profile data not available.</p>;
 
-  const { name, email, assignedShifts, shiftRequests } = data.me;
+  const { name, email, role, assignedShifts, shiftRequests } = data.me;
+  const avatarUrl = `https://i.pravatar.cc/100?u=${email}`;
+
+  const formatDateTime = (dateStr: string) => {
+    if (!dateStr) return 'Future time';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return 'Future time';
+    const now = new Date();
+    return date > now
+      ? 'Future time'
+      : new Intl.DateTimeFormat('en-US', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+        }).format(date);
+  };
+
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return 'Future date';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return 'Future date';
+    const now = new Date();
+    return date > now
+      ? 'Future date'
+      : new Intl.DateTimeFormat('en-US', {
+          dateStyle: 'medium',
+        }).format(date);
+  };
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-background rounded-2xl shadow-card border border-accent space-y-8">
-      <section>
-        <h2 className="text-3xl font-semibold text-burgundyLight mb-4">Your Profile</h2>
-        <div className="text-grayDark space-y-2">
-          <p><span className="font-semibold">Name:</span> {name}</p>
-          <p><span className="font-semibold">Email:</span> {email}</p>
+    <div className="max-w-3xl mx-auto mt-10 p-6 bg-background/85 rounded-2xl shadow-card border border-burgundyLight space-y-10">
+      {/* Profile Header */}
+      <header className="flex items-center gap-4">
+        <img
+          src={avatarUrl}
+          alt={`${name}'s avatar`}
+          className="w-16 h-16 rounded-full border border-gray-300 shadow-sm"
+        />
+        <div>
+          <h2 className="text-3xl font-semibold text-burgundyLight">Welcome, {name}</h2>
+          <p className="text-sm text-grayDark">{role} | {email}</p>
         </div>
-      </section>
+      </header>
 
-      <section>
-        <h3 className="text-2xl font-semibold text-teal mb-3">Assigned Shifts</h3>
+      {/* Assigned Shifts */}
+      <article>
+        <h3 className="text-2xl font-semibold text-teal/90 mb-4">Assigned Shifts</h3>
         {assignedShifts.length === 0 ? (
-          <p className="text-grayLight italic">No assigned shifts yet.</p>
+          <p className="text-grayLight italic">You have no assigned shifts at the moment.</p>
         ) : (
-          <ul className="space-y-3">
-            {assignedShifts.map(shift => (
+          <ul className="space-y-4">
+            {assignedShifts.map(({ id, title, start, end, status }) => (
               <li
-                key={shift.id}
-                className="p-3 bg-white rounded-lg border border-accent shadow-sm text-sm text-grayDark"
+                key={id}
+                className="p-4 bg-white rounded-lg border border-accent shadow-sm text-sm text-grayDark"
               >
-                <strong className="text-burgundyLight">{shift.title}</strong> —{' '}
-                {new Date(shift.start).toLocaleString()} to {new Date(shift.end).toLocaleString()} —{' '}
-                <span className="italic text-orange">{shift.status}</span>
+                <p className="font-semibold text-burgundyLight">{title}</p>
+                <p>{formatDateTime(start)} &rarr; {formatDateTime(end)}</p>
+                <p className="italic text-orange">{status}</p>
               </li>
             ))}
           </ul>
         )}
-      </section>
+      </article>
 
-      <section>
-        <h3 className="text-2xl font-semibold text-teal mb-3">Shift Requests</h3>
+      {/* Shift Requests */}
+      <article>
+        <h3 className="text-2xl font-semibold text-teal mb-4">Shift Requests</h3>
         {shiftRequests.length === 0 ? (
           <p className="text-grayLight italic">No shift requests submitted.</p>
         ) : (
-          <ul className="space-y-3">
-            {shiftRequests.map(req => (
+          <ul className="space-y-4">
+            {shiftRequests.map(({ id, shift, status }) => (
               <li
-                key={req.id}
-                className="p-3 bg-lightBeige rounded-lg border border-orangeLight shadow-sm text-sm text-grayDark"
+                key={id}
+                className="p-4 bg-lightBeige rounded-lg border border-orangeLight shadow-sm text-sm text-grayDark"
               >
-                Requested: <strong className="text-burgundyLight">{req.shift.title}</strong> on{' '}
-                {new Date(req.shift.start).toLocaleDateString()} —{' '}
-                <span className="italic text-orange">{req.status}</span>
+                <p className="font-semibold text-burgundyLight">{shift.title}</p>
+                <p>Requested on: {formatDate(shift.start)}</p>
+                <p className="italic text-orange">{status}</p>
               </li>
             ))}
           </ul>
         )}
-      </section>
+      </article>
     </div>
   );
 }

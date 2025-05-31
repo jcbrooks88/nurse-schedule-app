@@ -14,9 +14,15 @@ export default function AvailabilityPage() {
       <div className="max-w-3xl mx-auto bg-lightBeige border border-accent rounded-xl shadow-card hover:shadow-md transition-shadow p-8">
         <h1 className="text-3xl font-bold text-center text-grayDarker mb-6">Set Your Availability</h1>
         <p className="text-grayDark text-center mb-8">
-          Select the days you're available to work. This helps the scheduler match you to open shifts.
+          Select the days you're available to work. 
         </p>
+        <div>
         <AvailabilityCalendar userId={data.me.id} />
+        </div>
+        <br></br>
+        <p className="text-grayDark text-center mb-8">
+          Unselect if you change your mind. 
+        </p>
       </div>
     </div>
   );

@@ -100,7 +100,7 @@ export default function UpcomingShifts({ shifts }: { shifts: Shift[] }) {
             return (
               <li
                 key={shift.id}
-                className="bg-white/80 rounded-2xl shadow-md border border-accent hover:shadow-lg transition-shadow p-6"
+                className="bg-white/80 rounded-2xl shadow-md border border-burgundy hover:shadow-lg transition-shadow p-6"
               >
                 <div className="text-xl font-medium text-burgundyLight">{shift.title}</div>
                 <div className="text-sm text-grayDarker mt-2">
@@ -109,7 +109,7 @@ export default function UpcomingShifts({ shifts }: { shifts: Shift[] }) {
                       {shift.start.toLocaleString()} – {shift.end.toLocaleString()}
                     </>
                   ) : (
-                    <span className="text-grayLighter italic">Invalid date</span>
+                    <span className="text-grayLighter italic">Future date</span>
                   )}
                 </div>
                 <div className="mt-3 text-sm">
@@ -126,10 +126,10 @@ export default function UpcomingShifts({ shifts }: { shifts: Shift[] }) {
                     </button>
                   )}
                   {isPending && (
-                    <span className="text-orange font-semibold italic">Pending approval</span>
+                    <span className="text-orange/95 bg-orangeLight/25 italic">Pending approval</span>
                   )}
                   {isApproved && (
-                    <span className="text-burgundy font-semibold">
+                    <span className="text-burgundy/95 bg-background/75 font-semibold">
                       Approved - Added to your schedule
                     </span>
                   )}
